@@ -1,31 +1,67 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { MessageService } from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
+  providers: [MessageService],
 })
 export class RegisterComponent implements OnInit {
-  model:any={}
-  user:any
-  constructor(private authService:AuthService, private router:Router) { }
+  model: any = {
+    id_token: null,
+  };
+  user: any;
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private messageService: MessageService,
+    private primengConfig: PrimeNGConfig
+  ) {}
 
-  ngOnInit(): void {
-  }
-
-  register(){
-    this.authService.register(this.model).subscribe({
-      next:res=>this.user=res,
-      error:error=>console.log(error)
+  showSuccess() {
+    this.messageService.add({
+      key: 'tc',
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Message Content',
     });
-    if(this.user){
-      this.router.navigate(["/login"])
-    }else{
-      alert("invalid user name or password")
-    }
-     
+  }
+  ngOnInit(): void {
+    this.primengConfig.ripple = true;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Record Saved',
+    });
   }
 
+  register() {
+    console.log(this.model);
+    this.authService.register(this.model).subscribe({
+      next: (res) => {
+        this.user = res;
+        this.messageService.add({
+          key: 'tc',
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Message Content',
+        });
+
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.log(error);
+        this.messageService.add({
+          key: 'tc',
+          severity: 'error',
+          summary: error.status,
+          detail: error.error.message,
+        });
+      },
+    });
+  }
 }

@@ -1,0 +1,66 @@
+<main class="main" id="top">
+  <div class="container-fluid">
+    <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand ">
+      <div class="d-flex align-items-center">
+        <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+        <a class="navbar-brand me-1 me-sm-3" routerLink="/home">
+          <!-- <div class="d-flex align-items-center"><img class="me-2" src="../../assets/img/icons/spot-illustrations/falcon.png" alt="" width="40"><span class="font-sans-serif">falcon</span> -->
+          <!-- </div> -->
+          <button class="d-flex align-items-center p-3 btn btn-outline-secondary btn-sm">العودة إلي الصفحة الرئيسية</button>
+        </a>
+      </div>
+      <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+        <li class="nav-item">
+          <a class="nav-link" role="button" routerLink="/createUser"  aria-haspopup="true" aria-expanded="false" data-hide-on-body-scroll="data-hide-on-body-scroll">
+          <button class=" btn btn-outlin-secondary rounded-pill btn-sm" type="button">
+             <span class=" p-1 bi-plus-circle-fill mt-auto"></span>إضافة مستخدم جديد
+          </button></a>
+        </li>
+      </ul>
+
+    </nav>
+    <div class="content">
+    <div class="card">
+      <div class="card-header bg-light">
+        <div class="row align-items-center">
+          <div class="col">
+            <h5 class="mb-0" id="followers">{{users?.length}} <span class="d-none d-sm-inline-block">مستخدم</span></h5>
+          </div>
+          <div class="col">
+            <form>
+              <div class="row g-0">
+                <div class="col-8">
+                  <input class="form-control form-control-sm" type="text" placeholder="بحث">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="card-body bg-light px-1 py-0">
+        <div class="row g-0 text-center fs--1">
+          <div *ngFor="let user of users" class="col-6 col-md-4 col-lg-3 col-xxl-2 mb-1">
+            <div class="bg-white dark__bg-1100 p-3 h-100"><a [routerLink]="['/user_details',user.id]"><img class="img-thumbnail img-fluid rounded-circle mb-3 shadow-sm"
+               [src]="imageUrl || 'https://png.pngtree.com/png-clipart/20210915/ourmid/pngtree-user-avatar-placeholder-png-image_3918418.jpg'" width="100"></a>
+              <h6 class="mb-1"><a href="../../pages/user/profile.html">{{user.first_name}} {{user.last_name}}</a>
+              </h6>
+              <p class="fs--2 mb-1"><a class="text-700" href="#!">{{user.email}}</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
+        <div class="col-12 col-sm-auto text-center">
+          <p class="mb-0 text-600">Thank you for creating with Falcon <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none"> 2022 © <a href="https://themewagon.com">Themewagon</a></p>
+        </div>
+        <div class="col-12 col-sm-auto text-center">
+          <p class="mb-0 text-600">v3.14.0</p>
+        </div>
+      </div>
+    </footer>
+    </div>
+  </div>
+</main>
+

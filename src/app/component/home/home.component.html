@@ -1,7 +1,156 @@
-<div class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="col mt-5 text-center">
-            <button class="btn btn-info btn-lg" type="button" (click)="logout()">تسجيل خروج</button>
+<div class="container-fluid">
+    <nav class="navbar navbar-light navbar-vertical navbar-expand-xl">
+        <div class="d-flex align-items-center">
+          <!-- <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse"
+           data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="true" 
+           aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button> -->
+          <a class="navbar-brand">
+            <div class="d-flex align-items-center py-3"><img class="me-2" src="../assets/img/icons/spot-illustrations/falcon.png" alt="" width="40"><span class="font-sans-serif">falcon</span>
+            </div>
+          </a>
         </div>
-    </div>
+        <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
+          <div class="navbar-vertical-content scrollbar">
+            <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
+              <li class="nav-item" *ngFor="let category of categories; let i = index" value="{{i}}">
+             
+                <a (click)="filterData(category)" class="nav-link dropdown-indicator" href='#dash{{i}}'  role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dashboard">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span><span style="font-size: 16px; " class="nav-link-text ps-1">{{category?.Category_name}}</span>
+                    </div>
+                </a>
+                <ul class="nav collapse" id="dash{{i}}">
+                  <li class="nav-item" *ngFor="let subcategory of category.subcategories"><a class="nav-link" >
+                      <div class="d-flex align-items-center"><span class="nav-link-text ps-1">{{subcategory.SubCategory_name}}</span>
+                      </div>
+                    </a>
+                   
+                  </li>
+                </ul>  
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <div class="content">
+        <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand">
+          <div class="d-flex align-items-center">
+            <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse"
+             data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="true" 
+             aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+            <!-- <a class="navbar-brand">
+              <div class="d-flex align-items-center py-3"><img class="me-2" src="../assets/img/icons/spot-illustrations/falcon.png" alt="" width="40"><span class="font-sans-serif">falcon</span>
+              </div>
+            </a> -->
+          </div>
+          <ul class="navbar-nav align-items-center d-none d-lg-block">
+            <li class="nav-item">
+              <!-- <div class="search-box" data-list="{&quot;valueNames&quot;:[&quot;title&quot;]}">
+                <form class="position-relative" data-bs-toggle="search" data-bs-display="static" aria-expanded="false">
+                  <input class="form-control search-input fuzzy-search" type="search"  aria-label="Search">
+                  <svg class="svg-inline--fa fa-search fa-w-16 search-box-icon" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>
+                </form>  
+              </div> -->
+            </li>
+          </ul>
+          <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+            <li class="nav-item">
+              <a *ngIf="(user.role_id == 1)" class="nav-link" role="button" routerLink="/createFile"  aria-haspopup="true" aria-expanded="false" data-hide-on-body-scroll="data-hide-on-body-scroll">
+              <button class=" btn btn-outlin-secondary rounded-pill btn-sm" type="button">
+                 <span class=" p-1 bi-plus-circle-fill mt-auto"></span>إضافة ملف جديد
+              </button></a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link notification-indicator notification-indicator-primary px-0 fa-icon-wait" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-hide-on-body-scroll="data-hide-on-body-scroll"><svg class="svg-inline--fa fa-bell fa-w-14" data-fa-transform="shrink-6" style="font-size: 33px;transform-origin: 0.4375em 0.5em;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><g transform="translate(224 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M224 512c35.32 0 63.97-28.65 63.97-64H160.03c0 35.35 28.65 64 63.97 64zm215.39-149.71c-19.32-20.76-55.47-51.99-55.47-154.29 0-77.7-54.48-139.9-127.94-155.16V32c0-17.67-14.32-32-31.98-32s-31.98 14.33-31.98 32v20.84C118.56 68.1 64.08 130.3 64.08 208c0 102.3-36.15 133.53-55.47 154.29-6 6.45-8.66 14.16-8.61 21.71.11 16.4 12.98 32 32.1 32h383.8c19.12 0 32-15.6 32.1-32 .05-7.55-2.61-15.27-8.61-21.71z" transform="translate(-224 -256)"></path></g></g></svg></a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end dropdown-menu-card dropdown-menu-notification dropdown-caret-bg" aria-labelledby="navbarDropdownNotification">
+                <div class="card card-notification shadow-none"></div>
+              </div>
+            </li>
+            <li class="nav-item dropdown"><a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <!-- <div class="avatar avatar-xl">
+                  <img class="rounded-circle" src="../assets/img/team/3-thumb.png" alt="">
+                </div> -->
+              مرحبا <span style="font-weight: bolder;">{{user.first_name}}</span> 
+              </a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
+                <div class="bg-white dark__bg-1000 rounded-2 py-2">
+                  <a *ngIf="(user.role_id == 1)" class="dropdown-item" routerLink="/adminPage"> المستخدمين </a>
+                  <div *ngIf="(user.role_id == 1)" class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="../pages/user/profile.html">حسابي</a>
+                  <a class="dropdown-item" href="../pages/user/settings.html">الإعدادات</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#" (click)="logout()">تسجيل الخروج</a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        <div class="card mb-3">
+          <div class="card-header">
+          </div>
+          <div class="card-body pt-0">
+            
+              <div id="tableExample3">
+                <div class="table-responsive scrollbar">
+                  <table class="table table-bordered table-striped fs--1 mb-0">
+                    <thead class="bg-200 text-900">
+                      <tr>
+                        <th class="sort" data-sort="Doc_No">رقم القرار </th>
+                        <th class="sort" data-sort="Year">السنة</th>
+                        <th class="sort" data-sort="file_name">إسم القرار </th>
+                        <th> عرض صورة القرار </th>
+
+                      </tr>
+                    </thead>
+                    <tbody class="list">
+                      <tr *ngFor="let item of getDataForPage()">
+                        <td class="Doc_No" >{{item.Doc_No}}</td>
+                        <td class="Year">{{item.Year}}</td>
+                        <td class="file_name">{{item.file_name}}</td>
+                        <td><button class="btn btn-outline-secondary" (click)="openModal(item.file_Path)">preview</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <app-modal #modal>
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-body">
+                          <img [src]="imageUrl" class="img-responsive">
+                        </div>
+                      </div>
+                    </div>
+                  </app-modal>
+                </div>
+                <div class="d-flex justify-content-center mt-3">
+                  <nav class="nael">
+                    
+                    <ul>
+                      <li *ngIf="page > 1">
+                        <a (click)="goToPage(page - 1)"><i class="bi bi-chevron-right"></i></a>
+                      </li>
+                      <li *ngFor="let pg of pages">
+                        <a [class.active]="pg === page" (click)="goToPage(pg)">{{ pg }}</a>
+                      </li>
+                      <li *ngIf="page < totalPages">
+                        <a (click)="goToPage(page + 1)"><i class="bi bi-chevron-left"></i></a>
+                      </li>
+                    </ul>
+                  </nav>
+                  
+                  <!-- <button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-right"></span></button> -->
+                  <!-- <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-left"> </span></button> -->
+                </div> 
+              </div>
+          </div>
+        </div>
+        <footer class="footer">
+          <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
+            <div class="col-12 col-sm-auto text-center">
+              <p class="mb-0 text-600">Thank you for creating with Falcon <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none"> 2022 © <a href="https://themewagon.com">Themewagon</a></p>
+            </div>
+            <div class="col-12 col-sm-auto text-center">
+              <p class="mb-0 text-600">v3.14.0</p>
+            </div>
+          </div>
+        </footer>
+      </div>
 </div>

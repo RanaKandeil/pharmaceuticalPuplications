@@ -1,0 +1,11 @@
+#yearPicker::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+#yearPicker::-webkit-inner-spin-button {
+    display: none;
+  }
+#yearPicker {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;  
+  }

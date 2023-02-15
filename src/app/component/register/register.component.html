@@ -1,5 +1,6 @@
 <main class="main" id="top">
     <div class="container-fluid">
+      <p-toast position="top-center" key="tc"></p-toast>
       <div class="row min-vh-100 flex-center g-0">
         <div class="col-lg-8 col-xxl-5 py-3 position-relative"><img class="bg-auth-circle-shape" src="../../../assets/img/icons/spot-illustrations/bg-shape.png" alt="" width="250"><img class="bg-auth-circle-shape-2" src="../../../assets/img/icons/spot-illustrations/shape-1.png" alt="" width="150">
           <div class="card overflow-hidden z-index-1">
@@ -24,42 +25,83 @@
                     <h3>إنشاء حساب جديد</h3>
                     <form #registerForm="ngForm" (ngSubmit)="register()">
                       <div class="mb-3">
-                        <label class="form-label" for="card-name">إسم المستخدم</label>
-                        <input name="username" [(ngModel)]="model.username"
-                        class="form-control" type="text" autocomplete="on" id="card-name" />
+                        <label class="form-label" for="card-name">الإسم الأول </label>
+                        <input name="first_name" [(ngModel)]="model.first_name" #first_name="ngModel"
+                        class="form-control" type="text" autocomplete="on" id="card-name" required />
+                        <div class="alert alert-danger"
+                         *ngIf="(first_name.touched||registerForm.submitted) && first_name.errors?.['required']">
+                          First Name Is Required
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label" for="card-name">الإسم الأخير </label>
+                        <input name="last_name" [(ngModel)]="model.last_name" #last_name="ngModel"
+                        class="form-control" type="text" autocomplete="on" id="card-name" required />
+                        <div class="alert alert-danger"
+                         *ngIf="(last_name.touched||registerForm.submitted) && last_name.errors?.['required']">
+                          Last Name Is Required
+                        </div>
                       </div>
                       <div class="mb-3">
                         <label class="form-label" for="card-email">البريد الالكتروني</label>
-                        <input name="email" [(ngModel)]="model.email"
-                        class="form-control" type="email" autocomplete="on" id="card-email" />
+                        <input name="email" [(ngModel)]="model.email" #email="ngModel"
+                        class="form-control" type="email" autocomplete="on" id="card-email"
+                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"required />
+                        <div class="alert alert-danger"
+                         *ngIf="(email.touched||registerForm.submitted) && email.errors?.['required']">
+                          Email Is Required
+                        </div>
+                        <div class="alert alert-danger"
+                         *ngIf="(email.touched||registerForm.submitted) && email.errors?.['pattern']">
+                          Invalid Email                       
+                         </div> 
                       </div>
                       <div class="row gx-2">
                         <div class="mb-3 col-sm-6">
                           <label class="form-label" for="card-password">كلمة المرور</label>
-                          <input name="password" [(ngModel)]="model.password"
-                          class="form-control" type="password" autocomplete="on" id="card-password" />
+                          <input name="password" [(ngModel)]="model.password" #password="ngModel"
+                          class="form-control" type="password" autocomplete="on" id="card-password"
+                          pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,16}"  required/>
+                          <div class="alert alert-danger"
+                           *ngIf="(password.touched||registerForm.submitted) && password.errors?.['required']">
+                             Password Is Required
+                          </div>
+                          <div class="alert alert-danger"
+                           *ngIf="(password.touched||registerForm.submitted) && password.errors?.['pattern']">
+                            Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character and not less than 8 or more than 16 characters
+                          </div>                            
                         </div>
-                        <div class="mb-3 col-sm-6">
+                        <!-- <div class="mb-3 col-sm-6">
                           <label class="form-label" for="card-confirm-password">تأكيد كلمة المرور</label>
-                          <input class="form-control" type="password" autocomplete="on" id="card-confirm-password" />
-                        </div>
+                          <input name="confirmPassword" [(ngModel)]="model.confirmPassword" #confirmPassword="ngModel"
+                          class="form-control" type="password" autocomplete="on" id="card-confirm-password" 
+                          pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,16}"  required/>
+                          <div class="alert alert-danger" 
+                          *ngIf="(confirmPassword.touched||registerForm.submitted) && confirmPassword.errors?.['required']">
+                            Confirm Password Is Required
+                          </div>
+                          <div class="alert alert-danger"
+                           *ngIf="(confirmPassword.touched||registerForm.submitted) && model.confirmPassword !==model.password ">
+                            Confirm Password Not Match Password
+                          </div>
+                        </div> -->
                       </div>
                       <!-- <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="card-register-checkbox" />
                         <label class="form-label" for="card-register-checkbox">I accept the <a href="#!">terms </a>and <a href="#!">privacy policy</a></label>
                       </div> -->
                       <div class="mb-3">
-                        <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">تسجيل </button>
+                        <button [disabled]="!registerForm.valid" class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">تسجيل </button>
                       </div>
                     </form>
-                    <div class="position-relative mt-4">
+                    <!-- <div class="position-relative mt-4">
                       <hr />
                       <div class="divider-content-center">أو تسجيل عن طريق؟</div>
                     </div>
                     <div class="row g-2 mt-2">
                       <div class="col-sm-6"><a class="btn btn-outline-google-plus btn-sm d-block w-100"><span class="fab fa-google-plus-g me-2" data-fa-transform="grow-8"></span> google</a></div>
                       <div class="col-sm-6"><a class="btn btn-outline-facebook btn-sm d-block w-100"><span class="fab fa-facebook-square me-2" data-fa-transform="grow-8"></span> facebook</a></div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
