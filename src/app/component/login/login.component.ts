@@ -8,8 +8,8 @@ import {
 } from '@abacritt/angularx-social-login';
 import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
-import * as bcrypt from 'bcryptjs';
-
+// @ts-ignore
+import * as CryptoJS from 'crypto-js';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -41,8 +41,7 @@ export class LoginComponent implements OnInit {
   }
 
   async login() {
-    
-    this.model.password = await bcrypt.hash(this.model.password+'postgress', 10);
+   this.model.password = await CryptoJS.AES.encrypt(this.model.password, 'postgress').toString()
     this.authService.login(this.model).subscribe({
       
       next: (res) => {

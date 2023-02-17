@@ -26,7 +26,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { MatSortModule } from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminPageComponent } from './component/admin-page/admin-page.component';
 import { UserDetailsComponent } from './component/user-details/user-details.component';

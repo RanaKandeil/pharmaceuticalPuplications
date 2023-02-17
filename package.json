@@ -23,9 +23,8 @@
     "@angular/router": "^14.2.12",
     "@ng-select/ng-select": "^9.1.0",
     "@types/bcryptjs": "^2.4.2",
-    "bcryptjs": "^2.4.3",
     "choices.js": "^10.2.0",
-    "crypto-browserify": "^3.12.0",
+    "crypto-js": "^4.1.1",
     "jquery": "^3.6.3",
     "ngx-toastr": "^14.3.0",
     "primeicons": "^6.0.1",
@@ -48,7 +47,6 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "node-libs-browser": "^2.2.1",
     "typescript": "~4.8.4"
   }
 }

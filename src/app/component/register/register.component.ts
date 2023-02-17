@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
-
+// @ts-ignore
+import * as CryptoJS from 'crypto-js';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -39,8 +40,9 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  register() {
+  async register() {
     console.log(this.model);
+    this.model.password = await CryptoJS.AES.encrypt(this.model.password, 'postgress').toString()
     this.authService.register(this.model).subscribe({
       next: (res) => {
         this.user = res;
