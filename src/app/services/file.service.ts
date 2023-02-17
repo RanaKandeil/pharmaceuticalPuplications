@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SearchFile } from '../interfaces/searchFile';
+import {  SearchFiltre } from '../interfaces/searchFile';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +17,10 @@ export class FileService {
   getAll():Observable<File[]>{
     return this.http.get<File[]>("https://pharmaciax-api.onrender.com/fileData/all")
   }
-
-  searchForFile(searchFile:SearchFile):Observable<File[]>{
+  // getAllFilesByCountryID(searchFile:SearchFiltre):Observable<File[]>{
+  //   return this.http.post<File[]>("https://pharmaciax-api.onrender.com/fileData/search",searchFile).pipe();
+  // }
+  searchForFile(searchFile:SearchFiltre):Observable<File[]>{
     return this.http.post<File[]>("https://pharmaciax-api.onrender.com/fileData/search",searchFile).pipe();
   }
 }

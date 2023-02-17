@@ -22,6 +22,8 @@
     "@angular/platform-browser-dynamic": "^14.2.12",
     "@angular/router": "^14.2.12",
     "@ng-select/ng-select": "^9.1.0",
+    "@types/bcryptjs": "^2.4.2",
+    "bcryptjs": "^2.4.3",
     "choices.js": "^10.2.0",
     "jquery": "^3.6.3",
     "ngx-toastr": "^14.3.0",

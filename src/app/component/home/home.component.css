@@ -1,3 +1,10 @@
+.noFiles {
+padding-right:150px ;
+text-align: center;
+font-size: large;
+font-weight: bold;
+}
+
 .nael ul {
     display: flex;
     list-style: none;

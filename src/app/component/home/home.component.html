@@ -12,6 +12,14 @@
         <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
           <div class="navbar-vertical-content scrollbar">
             <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
+              <li class="nav-item">
+                <a (click)="showAll()" class="nav-link" role="button">
+                  <div class="d-flex align-items-center">
+                    <span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span>
+                    <span style="font-size: 16px; " class="nav-link-text ps-1">الكل</span>
+                  </div>
+                </a>
+              </li>
               <li class="nav-item" *ngFor="let category of categories; let i = index" value="{{i}}">
              
                 <a (click)="filterData(category)" class="nav-link dropdown-indicator" href='#dash{{i}}'  role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dashboard">
@@ -53,22 +61,28 @@
             </li>
           </ul>
           <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
-            <li class="nav-item">
-              <a *ngIf="(user.role_id == 1)" class="nav-link" role="button" routerLink="/createFile"  aria-haspopup="true" aria-expanded="false" data-hide-on-body-scroll="data-hide-on-body-scroll">
+            <li class="nav-item pt-1">
+              <a *ngIf="(user.role_id == 1)" class="nav-link" role="button" routerLink="/createFile" aria-haspopup="true" aria-expanded="false" >
               <button class=" btn btn-outlin-secondary rounded-pill btn-sm" type="button">
                  <span class=" p-1 bi-plus-circle-fill mt-auto"></span>إضافة ملف جديد
               </button></a>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link notification-indicator notification-indicator-primary px-0 fa-icon-wait" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-hide-on-body-scroll="data-hide-on-body-scroll"><svg class="svg-inline--fa fa-bell fa-w-14" data-fa-transform="shrink-6" style="font-size: 33px;transform-origin: 0.4375em 0.5em;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><g transform="translate(224 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M224 512c35.32 0 63.97-28.65 63.97-64H160.03c0 35.35 28.65 64 63.97 64zm215.39-149.71c-19.32-20.76-55.47-51.99-55.47-154.29 0-77.7-54.48-139.9-127.94-155.16V32c0-17.67-14.32-32-31.98-32s-31.98 14.33-31.98 32v20.84C118.56 68.1 64.08 130.3 64.08 208c0 102.3-36.15 133.53-55.47 154.29-6 6.45-8.66 14.16-8.61 21.71.11 16.4 12.98 32 32.1 32h383.8c19.12 0 32-15.6 32.1-32 .05-7.55-2.61-15.27-8.61-21.71z" transform="translate(-224 -256)"></path></g></g></svg></a>
-              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end dropdown-menu-card dropdown-menu-notification dropdown-caret-bg" aria-labelledby="navbarDropdownNotification">
-                <div class="card card-notification shadow-none"></div>
+            <li *ngIf="user.role_id == 1 || user.role_id == 2||user.role_id == 3" class="nav-item dropdown pt-2 pe-3">
+              <a class="nav-link" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <span style="font-weight:bolder ;font-size: 16px;">الدولة</span>
+              </a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownNotification">
+                <div class="bg-white dark__bg-1000 rounded-2 py-2">
+                  <a class="dropdown-item" *ngFor="let country of countries">{{country.country_name}} <img style="width: 20px;height: 10px;justify-self:self-end;" [src]="country.flag"></a>
+                  
+                  <!-- <a class="dropdown-item">Egypt</a>
+                  <a class="dropdown-item">Kuwait</a>
+                  <a class="dropdown-item">Ksa</a> -->
+                </div>
               </div>
             </li>
-            <li class="nav-item dropdown"><a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <!-- <div class="avatar avatar-xl">
-                  <img class="rounded-circle" src="../assets/img/team/3-thumb.png" alt="">
-                </div> -->
+            <li class="nav-item dropdown pt-1"><a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              
               مرحبا <span style="font-weight: bolder;">{{user.first_name}}</span> 
               </a>
               <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
@@ -102,7 +116,10 @@
                       </tr>
                     </thead>
                     <tbody class="list">
-                      <tr *ngFor="let item of getDataForPage()">
+                      <div class="noFiles" *ngIf="totalItems ==0">
+                        <h1 class="text-center">لا توجد ملفات</h1>
+                      </div>
+                      <tr  *ngFor="let item of getDataForPage()">
                         <td class="Doc_No" >{{item.Doc_No}}</td>
                         <td class="Year">{{item.Year}}</td>
                         <td class="file_name">{{item.file_name}}</td>

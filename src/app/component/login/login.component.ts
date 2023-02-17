@@ -8,6 +8,7 @@ import {
 } from '@abacritt/angularx-social-login';
 import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+import * as bcrypt from 'bcryptjs';
 
 @Component({
   selector: 'app-login',
@@ -39,11 +40,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  login() {
+  async login() {
+    this.model.password = await bcrypt.hash(this.model.password, 10);
     this.authService.login(this.model).subscribe({
+      
       next: (res) => {
         this.user = res;
-        console.log(this.user);
         this.messageService.add({
           key: 'tc',
           severity: 'success',
@@ -55,6 +57,7 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (error) => {
+        console.log(error)
         this.messageService.add({
           key: 'tc',
           severity: 'error',

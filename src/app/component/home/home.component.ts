@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Category } from 'src/app/interfaces/category';
-import { SearchFile } from 'src/app/interfaces/searchFile';
+import {  SearchFiltre } from 'src/app/interfaces/searchFile';
 import { AuthService } from 'src/app/services/auth.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { FileService } from 'src/app/services/file.service';
@@ -18,13 +18,14 @@ import { ModalComponent } from '../modal/modal.component';
 })
 export class HomeComponent implements OnInit {
  user:any;
+ countries:any;
  categories: Category[] = [];
  files:any;
  page = 1;
  pageSize = 2;
  totalItems = 0;
  imageUrl:any;
- filteredArr: any[] = [];
+ filesByCountryId:any
 
 
 
@@ -39,6 +40,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
      this.user = JSON.parse(localStorage.getItem("user")!)
+     console.log(this.user)
+
+     this.categoryService.getCountries().subscribe(res=>{
+      this.countries = res
+     })
 
     this.categoryService.getCategories().subscribe({
       next:res=>{
@@ -47,16 +53,16 @@ export class HomeComponent implements OnInit {
       error:error=>console.log(error)
     })
 
-    
-     this.fileService.getAll().subscribe({
-       next:res=>{
-          this.files= res;
-          console.log(this.files)
-          this.filteredArr = this.files
-        this.totalItems = this.files.length;
-      },
-      error:error=>console.log(error)
-     })
+    this.showAll();
+    //  this.fileService.getAll().subscribe({
+    //    next:res=>{
+    //     console.log(res)
+    //       this.files= res;
+    //       console.log(this.files)
+    //     this.totalItems = this.files.length;
+    //   },
+    //   error:error=>console.log(error)
+    //  })
   }
 
   logout(){
@@ -99,10 +105,15 @@ export class HomeComponent implements OnInit {
   @ViewChild(ModalComponent) modal!: ModalComponent;
 
   filterData(category:Category){
-    const searchFilter: SearchFile = {
+    const searchFilter: SearchFiltre = {
       category_id: category.cat_id,
+      country_id: this.user?.Country_id,
     };
     
+    this.searchForFiles(searchFilter);
+  }
+
+  searchForFiles(searchFilter:SearchFiltre){
     this.fileService.searchForFile(searchFilter).subscribe(result=>{
       console.log(result)
       this.files = result;
@@ -110,6 +121,11 @@ export class HomeComponent implements OnInit {
       this.getDataForPage()
       this.goToPage(1)
     })
-
+  }
+  showAll(){
+    const searchFilter: SearchFiltre = {
+      country_id: this.user.Country_id,
+    };
+    this.searchForFiles(searchFilter);
   }
 }

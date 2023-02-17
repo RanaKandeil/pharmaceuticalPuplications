@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { HttpClientModule} from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './component/login/login.component';
@@ -34,6 +34,8 @@ import { CreateFileComponent } from './component/create-file/create-file.compone
 import { CreateUserComponent } from './component/create-user/create-user.component';
 import { UnauthorizedComponent } from './errors/unauthorized/unauthorized.component';
 import { ModalComponent } from './component/modal/modal.component';
+import { LoadingInterceptor } from './loading.interceptor';
+import { LoadingComponent } from './component/loading/loading.component';
 
 
 @NgModule({
@@ -49,6 +51,7 @@ import { ModalComponent } from './component/modal/modal.component';
     CreateUserComponent,
     UnauthorizedComponent,
     ModalComponent,
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,7 +96,12 @@ import { ModalComponent } from './component/modal/modal.component';
         }
       } as SocialAuthServiceConfig,
     },
-    MessageService
+    MessageService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

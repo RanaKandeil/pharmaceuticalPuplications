@@ -1,4 +1,4 @@
-export interface SearchFile{
+export interface SearchFiltre{
     country_id?: number ,
     category_id?: number,
     file_name?: number,
