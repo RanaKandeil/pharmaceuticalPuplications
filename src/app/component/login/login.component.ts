@@ -41,7 +41,8 @@ export class LoginComponent implements OnInit {
   }
 
   async login() {
-    this.model.password = await bcrypt.hash(this.model.password, 10);
+    
+    this.model.password = await bcrypt.hash(this.model.password+'postgress', 10);
     this.authService.login(this.model).subscribe({
       
       next: (res) => {
