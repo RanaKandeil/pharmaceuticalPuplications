@@ -1,0 +1,177 @@
+<main class="main" id="top">
+    <div class="container">
+      <div class="content">
+      
+      <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand">
+          <button
+            class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarVerticalCollapse"
+            aria-controls="navbarVerticalCollapse"
+            aria-expanded="false"
+            aria-label="Toggle Navigation"
+          >
+            <span class="navbar-toggle-icon"
+              ><span class="toggle-line"></span
+            ></span>
+          </button>
+          <a class="navbar-brand me-1 p-1 me-sm-3" routerLink="/home">
+            <!-- <div class="d-flex align-items-center">
+              <img
+                class="me-2"
+                src="../../assets/img/icons/spot-illustrations/falcon.png"
+                alt=""
+                width="40"
+              /><span class="font-sans-serif">falcon</span>
+            </div> -->
+            <button class="d-flex align-items-center p-3 btn btn-outline-dark btn-sm">العودة إلي الصفحة الرئيسية</button>
+  
+          </a>
+        </nav>
+      <div class="card mb-5">
+        <div class="card-header">
+          <div class="row flex-between-end">
+            <div class="col-auto align-self-center">
+              <h3 class="mb-0" data-anchor="data-anchor" id="basic-form">
+                  تعديل تفاصيل القرار
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body bg-light">
+          <div class="tab-content">
+            <div
+              class="tab-pane preview-tab-pane active"
+              role="tabpanel"
+              aria-labelledby="tab-dom-160a4566-7e94-45a2-bf04-b36ef49d954f"
+              id="dom-160a4566-7e94-45a2-bf04-b36ef49d954f"
+            >
+              <form [formGroup]="fileForm" (ngSubmit)="update()">
+                <div class="mb-3">
+                  <label class="form-label" for="file_name">إسم القرار</label>
+                  <input
+                    formControlName="file_name"
+                    class="form-control"
+                    type="text"/>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="Doc_No">رقم القرار</label>
+                  <input
+                    formControlName="Doc_No"
+                    class="form-control"
+                    type="text"/>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="Year">سنة إصدار القرار</label>
+                  <div class="p-fluid p-grid p-formgrid">
+                      <div class="p-field p-col-12">
+                          <p-calendar
+                          formControlName="Year"
+                            view="year"
+                            dateFormat="yy"
+                            [readonlyInput]="false"
+                            inputId="pickYear">
+                          </p-calendar>
+                      </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="txt_Ar">وصف القرار</label>
+                  <input
+                  formControlName="txt_Ar"
+                    class="form-control"
+                    type="text"/>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="txt_Eng"
+                    >Description</label>
+                  <input 
+                  formControlName="txt_Eng"
+                  class="form-control"  
+                  type="text" />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="file_Path">إختيار الملف</label>
+                  <input #fileInput
+                   formControlName="fileID"
+                  class="form-control" 
+                  type="file" />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="status_id">حالة القرار</label> 
+                  <ng-select
+                    formControlName="status_id"
+                    class="form-control ngSelect"
+                    [clearOnBackspace]="true"
+                    [searchable]="true">
+                    <ng-option *ngFor="let status of allStatus" [value]="status.status_id" >{{status.status_name}}</ng-option>
+                  </ng-select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="Country_id"> دولة إصدار القرار</label>
+                  <ng-select
+                    formControlName="Country_id"
+                    class="form-control ngSelect"
+                    [clearOnBackspace]="true"
+                    [searchable]="true"	>
+                    <ng-option *ngFor="let country of countries" [value]="country.id" >{{country.country_name}}</ng-option>
+                  </ng-select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="Category_id"> فئة القرار الرئيسية</label>
+                  <ng-select [(ngModel)]="selectedCategory"
+                    [searchable]="true"	
+                    (change)="onChange()"
+                    formControlName="Category_id"
+                    class="form-control ngSelect">
+                    <ng-option *ngFor="let category of categories" [value]="category.cat_id" >{{category.Category_name}}</ng-option>
+                  </ng-select>
+                </div>
+              
+                <div class="mb-3">
+                  <label class="form-label ngSelect" for="subCategories">إختيار فئة القرار الفرعية</label>
+                  <ng-select  class="form-control ngSelect" 
+                     [searchable]="true" 
+                     [multiple]="true"
+                  
+                    formControlName="subCategories" [closeOnSelect]="false">
+                    <ng-option *ngFor="let sub of subCategoriesArr" [value]="sub.subcat_id" >{{sub.SubCategory_name}}</ng-option>
+                    
+                  </ng-select>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-6">
+                    <label class="form-label" for="isAuthorized">? Authorized file</label>
+                    <br>
+                    <input  formControlName="isAuthorized" type="checkbox"/>
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">? Active</label>
+                    <br>
+                    <input formControlName="isactive" type="checkbox" checked>
+                  </div>
+                  </div>
+                <div class="d-flex justify-content-between">
+                  <button class="btn btn-primary" type="submit">حفظ</button>
+                  <button class="btn btn-danger ms-4" type="button" (click)="cancel()" >إلغاء</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="footer">
+          <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
+            <div class="col-12 col-sm-auto text-center">
+              <p class="mb-0 text-600">Thank you for creating with Falcon <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none"> 2022 © <a href="https://themewagon.com">Themewagon</a></p>
+            </div>
+            <div class="col-12 col-sm-auto text-center">
+              <p class="mb-0 text-600">v3.14.0</p>
+            </div>
+          </div>
+      </footer>
+      </div>
+      </div>
+  </main>
+  

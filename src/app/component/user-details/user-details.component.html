@@ -114,46 +114,31 @@
       <div class="card-body bg-light">
         <form [formGroup]="userForm" (ngSubmit)="onSubmit()"  class="row g-3">
           <div class="col-lg-6">
-            <label class="form-label" for="first_name">الإسم الأول</label>
-            <input
-            formControlName="first_name"
-              class="form-control"
-              id="first_name"
-              type="text"
-            />
-          </div>
-          <div class="col-lg-6">
-            <label class="form-label" for="last_name">الإسم الأخير </label>
-            <input
-            formControlName="last_name"
-              class="form-control"
-              id="last_name"
-              type="text"
-            />
-          </div>
-          <div class="col-lg-6">
             <label class="form-label" for="email">البريد الإلكتروني</label>
             <input
             formControlName="email"
               class="form-control"
               id="email"
-              type="email"
-            />
+              type="email">
           </div>
           <div class="col-lg-6">
             <label class="form-label" for="role_id">التصنيف</label>
-            <select class="form-control" formControlName="role_id">
-              <option *ngFor="let role of rolesId" >{{role.role_name}}</option>
-            </select>
+            <ng-select class="form-control ngSelect" formControlName="role_id">
+              <ng-option *ngFor="let role of rolesId"  [value]="role.id">{{role.role_name}}</ng-option>
+            </ng-select>
           </div>
           <div class="col-lg-12">
             <label class="form-label" for="Country_id">البلد</label>
-            <select class="form-control" formControlName="Country_id">
-              <option *ngFor="let country of countries">{{country.country_name}}</option>
-            </select>
+            <ng-select class="form-control ngSelect" formControlName="Country_id">
+              <ng-option *ngFor="let country of countries" [value]="country.id">{{country.country_name}}</ng-option>
+            </ng-select>
+          </div>
+          <div class="col-3">
+            <label class="form-lable" for="isActive">?Active</label>
+            <input type="checkbox" formControlName="isActive">
           </div>
           <div class="d-flex justify-content-between">
-            <button class="btn btn-primary" type="submit">حفظ</button>
+            <button class="btn btn-primary" type="submit">تعديل</button>
             <button class="btn btn-danger" type="button" (click)="cancel()">إلغاء</button>
           </div>
         </form>

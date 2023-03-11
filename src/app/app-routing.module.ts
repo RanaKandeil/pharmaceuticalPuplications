@@ -4,12 +4,15 @@ import { CategoryResolver } from './category.resolver';
 import { AdminPageComponent } from './component/admin-page/admin-page.component';
 import { CreateFileComponent } from './component/create-file/create-file.component';
 import { CreateUserComponent } from './component/create-user/create-user.component';
+import { FileDetailsComponent } from './component/file-details/file-details.component';
 import { ForgotPasswordComponent } from './component/forgot-password/forgot-password.component';
 import { HomeComponent } from './component/home/home.component';
 import { LoginComponent } from './component/login/login.component';
 import { RegisterComponent } from './component/register/register.component';
+import { UpdateFileComponent } from './component/update-file/update-file.component';
 import { UserDetailsComponent } from './component/user-details/user-details.component';
 import { UnauthorizedComponent } from './errors/unauthorized/unauthorized.component';
+import { FileDetailsResolver } from './file-details.resolver';
 import { FilesResolver } from './files.resolver';
 import { AdminGuard } from './guard/admin.guard';
 import { AuthGuard } from './guard/auth.guard';
@@ -21,7 +24,10 @@ const routes: Routes = [
   {path:'register',component:RegisterComponent},
   {path:'home',component:HomeComponent,canActivate:[AuthGuard],
   resolve:{category:CategoryResolver,files:FilesResolver}},
-  {path:'createFile',component:CreateFileComponent,canActivate:[AdminGuard],
+  {path:'file_details/:id', component:FileDetailsComponent,resolve:{file:FileDetailsResolver}},
+  {path:'update_file/:id', component:UpdateFileComponent,
+   resolve:{files:FilesResolver}},
+  {path:'createFile',component:CreateFileComponent,canActivate:[AuthGuard],
     resolve:{category:CategoryResolver}},
   {path:'forgot-password',component:ForgotPasswordComponent},
   {path:'adminPage',component:AdminPageComponent,canActivate:[AdminGuard]},

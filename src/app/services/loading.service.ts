@@ -8,6 +8,7 @@ export class LoadingService {
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
+  errorMessage = '';
 
   show() {
     this.loadingSubject.next(true);
@@ -15,5 +16,12 @@ export class LoadingService {
 
   hide() {
     this.loadingSubject.next(false);
+  }
+  setError(errorMessage: string) {
+    this.errorMessage = errorMessage;
+  }
+
+  clearError() {
+    this.errorMessage = '';
   }
 }

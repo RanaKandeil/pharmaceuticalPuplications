@@ -56,8 +56,18 @@
                           Invalid Email                       
                          </div> 
                       </div>
-                      <div class="row gx-2">
-                        <div class="mb-3 col-sm-6">
+                      <div class="mb-3">
+                        <label class="form-label" for="card-email">الدولة</label>
+                        <ng-select  name="country" 
+                         [(ngModel)]="model.Country_id" #Country_id="ngModel"
+                         class="form-control countryId">
+                          <ng-option *ngFor="let country of countries" [value]="country.id">{{country.country_name}}</ng-option>
+                      </ng-select>
+                        
+                         
+                      </div>
+                      
+                        <div class="mb-3">
                           <label class="form-label" for="card-password">كلمة المرور</label>
                           <input name="password" [(ngModel)]="model.password" #password="ngModel"
                           class="form-control" type="password" autocomplete="on" id="card-password"
@@ -70,7 +80,7 @@
                            *ngIf="(password.touched||registerForm.submitted) && password.errors?.['pattern']">
                             Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character and not less than 8 or more than 16 characters
                           </div>                            
-                        </div>
+                        
                         <!-- <div class="mb-3 col-sm-6">
                           <label class="form-label" for="card-confirm-password">تأكيد كلمة المرور</label>
                           <input name="confirmPassword" [(ngModel)]="model.confirmPassword" #confirmPassword="ngModel"

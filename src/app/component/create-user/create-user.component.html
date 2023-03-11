@@ -147,17 +147,16 @@
           
             <div class="col-lg-12">
               <label class="form-label" for="Country_id">البلد</label>
-             <ng-select class="form-control" formControlName="Country_id" [searchable]="true">
+             <ng-select class=" ngSelect form-control" formControlName="Country_id" [searchable]="true">
                 <ng-option *ngFor="let country of countries" [value]="country.id">{{country.country_name}}</ng-option>
              </ng-select>
-             <!-- <input
-             class="form-control"
-             formControlName="Country_id"
-             type="number"
-             min="1"
-             max="2"
-             /> -->
             </div>
+            <!-- <div class="col-lg-12">
+              <label class="form-label" for="Country_id">حالة المستخدم</label>
+              <ng-select class=" ngSelect form-control" formControlName="role_id" [searchable]="true">
+                <ng-option *ngFor="let role of rolesId" [value]="role.id">{{role.role_name}}</ng-option>
+              </ng-select>
+            </div> -->
             <div class="d-flex justify-content-between">
               <button class="btn btn-primary" type="submit">حفظ</button>
               <button class="btn btn-danger" type="button" (click)="cancel()">إلغاء</button>

@@ -13,11 +13,11 @@ export class AdminPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getAll().subscribe({
-      next:res=>{
+      next:(res:any)=>{
         this.users = res;
         console.log(this.users)
       },
-      error:error=>console.log(error)
+      error:(error:any)=>console.log(error)
     })
     
   }

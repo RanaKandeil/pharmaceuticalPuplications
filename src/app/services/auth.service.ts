@@ -23,8 +23,8 @@ currentUser$= this.currentUserSource.asObservable()
     return this.http.post("https://pharmaciax-api.onrender.com/user/create",user)
 
   }
-  updateUser(user:User):Observable<any>{
-    return this.http.put("https://pharmaciax-api.onrender.com/users" +'/'+ user.id,user)
+  updateUser(user:any):Observable<any>{
+    return this.http.put("https://pharmaciax-api.onrender.com/user/update" ,user).pipe(map(()=>user))
   }
   
 

@@ -13,14 +13,18 @@ export class CategoryService {
   countries:any;
  
   getCategories():Observable<any>{
-    return this.http.get("https://pharmaciax-api.onrender.com/CategoryList");
+    return this.http.get("https://pharmaciax-api.onrender.com/CategoryList").pipe();
   }
 
   getCountries():Observable<any>{
-    return this.http.get("https://pharmaciax-api.onrender.com/countries");
+    return this.http.get("https://pharmaciax-api.onrender.com/countries").pipe();
   }
   getRoleId(){
-    return this.http.get("https://pharmaciax-api.onrender.com/roles");
+    return this.http.get("https://pharmaciax-api.onrender.com/roles").pipe();
+  }
+
+  getRoleById(id:any){
+    return this.http.get('https://pharmaciax-api.onrender.com/role' +'/' + id).pipe();
   }
 }
 

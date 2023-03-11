@@ -10,6 +10,7 @@ import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 // @ts-ignore
 import * as CryptoJS from 'crypto-js';
+import { LoadingService } from 'src/app/services/loading.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -25,12 +26,13 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private googleService: SocialAuthService,
     private messageService: MessageService,
-    private primengConfig: PrimeNGConfig
+    private primengConfig: PrimeNGConfig,
+    private loadingService:LoadingService
   ) {}
 
   ngOnInit(): void {
     this.primengConfig.ripple = true;
-    this.googleService.authState.subscribe((res) => {
+    this.googleService.authState.subscribe((res:any) => {
       if (res) {
         this.user = res;
         console.log(this.user);
@@ -41,10 +43,12 @@ export class LoginComponent implements OnInit {
   }
 
   async login() {
+    this.loadingService.show();
    this.model.password = await CryptoJS.AES.encrypt(this.model.password, 'postgress').toString()
     this.authService.login(this.model).subscribe({
       
-      next: (res) => {
+      next: (res:any) => {
+        this.loadingService.hide();
         this.user = res;
         this.messageService.add({
           key: 'tc',
@@ -56,8 +60,10 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/home']);
         }
       },
-      error: (error) => {
-        console.log(error)
+      error: (error:any) => {
+         this.loadingService.setError(error.message);
+        this.loadingService.hide();
+      
         this.messageService.add({
           key: 'tc',
           severity: 'error',
@@ -77,7 +83,7 @@ export class LoginComponent implements OnInit {
   }
 
   signInWithGoogle(): void {
-    this.googleService.authState.subscribe((user) => {
+    this.googleService.authState.subscribe((user:any) => {
       this.user = user;
       console.log(this.user);
 

@@ -47,7 +47,7 @@
             aria-labelledby="tab-dom-160a4566-7e94-45a2-bf04-b36ef49d954f"
             id="dom-160a4566-7e94-45a2-bf04-b36ef49d954f"
           >
-            <form [formGroup]="fileForm" (ngSubmit)="createFile()">
+            <form [formGroup]="fileForm" (ngSubmit)="onFileUpload()">
               <div class="mb-3">
                 <label class="form-label" for="file_name">إسم القرار</label>
                 <input
@@ -55,26 +55,23 @@
                   class="form-control"
                   type="text"/>
               </div>
-              <!-- <div class="mb-3" hidden>
-                <label class="form-label" for="file_name">إسم القرار</label>
+              <div class="mb-3">
+                <label class="form-label" for="Doc_No">رقم القرار</label>
                 <input
                   formControlName="Doc_No"
                   class="form-control"
-                  hidden
                   type="text"/>
-              </div> -->
+              </div>
               <div class="mb-3">
                 <label class="form-label" for="Year">سنة إصدار القرار</label>
                 <div class="p-fluid p-grid p-formgrid">
-                    <div class="p-field p-col-12 p-md-4">
+                    <div class="p-field p-col-12">
                         <p-calendar
                         formControlName="Year"
                           view="year"
                           dateFormat="yy"
                           [readonlyInput]="false"
-                          inputId="pickYear"
-                          
-                          placeholder="إختر سنة الإصدار">
+                          inputId="pickYear">
                         </p-calendar>
                     </div>
                 </div>
@@ -96,16 +93,27 @@
               </div>
               <div class="mb-3">
                 <label class="form-label" for="file_Path">إختيار الملف</label>
-                <input 
-                formControlName="file_Path"
+                <input #fileInput  
                 class="form-control" 
                 type="file" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="status_id">حالة القرار</label> 
+                <ng-select
+                  formControlName="status_id"
+                  class="form-control ngSelect"
+                  [clearOnBackspace]="true"
+                  [searchable]="true"	
+                   [clearable]="true">
+                  <ng-option *ngFor="let status of allStatus" [value]="status.status_id" >{{status.status_name}}</ng-option>
+                </ng-select>
               </div>
               <div class="mb-3">
                 <label class="form-label" for="Country_id"> دولة إصدار القرار</label>
                 <ng-select
                   formControlName="Country_id"
-                  class="form-control">
+                  
+                  class="form-control ngSelect">
                   [clearOnBackspace]="true"
                   [searchable]="true"	
                   <ng-option *ngFor="let country of countries" [value]="country.id" >{{country.country_name}}</ng-option>
@@ -118,19 +126,24 @@
                   [searchable]="true"	
                   (change)="onChange()"
                   formControlName="Category_id"
-                  class="form-control"
-                  aria-label="Default select example">
+                  class="form-control ngSelect">
                   <ng-option *ngFor="let category of categories" [value]="category.cat_id" >{{category.Category_name}}</ng-option>
                 </ng-select>
               </div>
               <div class="mb-3">
                 <label class="form-label" for="subCategories">إختيار فئة القرار الفرعية</label>
-                <ng-select class="form-control" [multiple]="true"
-                   [searchable]="true"	[clearable]="true"
+                <ng-select class="form-control ngSelect" [multiple]="true"
+                  [searchable]="true"	[clearable]="true"
                   formControlName="subCategories" [closeOnSelect]="false">
                   <ng-option *ngFor="let sub of subCategoriesArr" [value]="sub.subcat_id" >{{sub.SubCategory_name}}</ng-option>
-                  
                 </ng-select>
+              </div>
+              <div class="row mb-3">
+              <div class="col-6">
+                <label class="form-label" for="isAuthorized">? Authorized file</label>
+                <br>
+                <input  formControlName="isAuthorized" type="checkbox"/>
+              </div>
               </div>
               <div class="d-flex justify-content-between">
                 <button class="btn btn-primary" type="submit">حفظ</button>

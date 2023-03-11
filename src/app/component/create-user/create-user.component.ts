@@ -13,9 +13,9 @@ import { CategoryService } from 'src/app/services/category.service';
 })
 export class CreateUserComponent implements OnInit {
 newUserForm:any;
-rolesId:any;
 countries:any;
 imageUrl:any
+
   constructor(private router:Router, private fb:FormBuilder,
     private authService:AuthService,private toastr: ToastrService,
     private categoryService:CategoryService) { }
@@ -27,13 +27,9 @@ imageUrl:any
       email:[""],
       password:[''],
       Country_id:[''],
-      token_id:['1']
         })
         
-        this.categoryService.getRoleId().subscribe(res=>{
-          this.rolesId = res
-        })
-        this.categoryService.getCountries().subscribe(res=>{
+        this.categoryService.getCountries().subscribe((res:any)=>{
           this.countries= res
         })
   }

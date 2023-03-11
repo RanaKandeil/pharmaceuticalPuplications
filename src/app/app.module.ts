@@ -21,11 +21,7 @@ import {
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
-import { MatTableModule } from '@angular/material/table';
 import { ToastrModule } from 'ngx-toastr';
-import { MatSortModule } from '@angular/material/sort';
-import {MatPaginatorModule} from '@angular/material/paginator';
-import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminPageComponent } from './component/admin-page/admin-page.component';
 import { UserDetailsComponent } from './component/user-details/user-details.component';
@@ -35,6 +31,11 @@ import { UnauthorizedComponent } from './errors/unauthorized/unauthorized.compon
 import { ModalComponent } from './component/modal/modal.component';
 import { LoadingInterceptor } from './loading.interceptor';
 import { LoadingComponent } from './component/loading/loading.component';
+import { FileDetailsComponent } from './component/file-details/file-details.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NgxEditorModule } from 'ngx-editor';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { UpdateFileComponent } from './component/update-file/update-file.component';
 
 
 @NgModule({
@@ -51,6 +52,8 @@ import { LoadingComponent } from './component/loading/loading.component';
     UnauthorizedComponent,
     ModalComponent,
     LoadingComponent,
+    FileDetailsComponent,
+    UpdateFileComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,11 +67,10 @@ import { LoadingComponent } from './component/loading/loading.component';
     CalendarModule,
     CommonModule,
     NgSelectModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatButtonModule,
     BrowserAnimationsModule,
+    PdfViewerModule,
+    MatTooltipModule,
+    NgxEditorModule,
     ToastrModule.forRoot(
       {
         timeOut: 10000,

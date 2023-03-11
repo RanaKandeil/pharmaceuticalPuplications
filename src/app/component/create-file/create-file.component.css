@@ -9,3 +9,6 @@
     -moz-appearance: textfield;
     appearance: textfield;  
   }
+  .ngSelect{
+    padding: 0;
+  }
