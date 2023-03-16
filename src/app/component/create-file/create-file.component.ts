@@ -32,7 +32,7 @@ export class CreateFileComponent implements OnInit {
     this.userId = userlogged.user_id
     this.fileForm = this.fb.group({
       file_name:[''],
-       Doc_No:[''],
+      Doc_No:[''],
       Year: [''],
       txt_Ar:[''],
       txt_Eng:[''],

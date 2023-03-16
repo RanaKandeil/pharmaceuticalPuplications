@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  base_url: 'https://pharmaciax-api.onrender.com/',
+  inactive: 'File-status-List',
+  
 };
 
 /*

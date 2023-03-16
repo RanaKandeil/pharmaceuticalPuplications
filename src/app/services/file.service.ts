@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import {  SearchFiltre } from '../interfaces/searchFile';
 
 @Injectable({
@@ -11,7 +12,7 @@ export class FileService {
   constructor(private http:HttpClient) { }
 
   // createFile(file:any){
-  //   return this.http.post("https://pharmaciax-api.onrender.com/fileData/create",file)
+  //   return this.http.post("`${environment.base_url}`fileData/create",file)
   // }
 
   createOrUpdateFile(fileForm:any,fileInput:any, url:any){
@@ -54,16 +55,16 @@ export class FileService {
     let headers = new HttpHeaders();
     let boundary = Math.random().toString().substr(2);
       headers.append('Content-Type', `multipart/form-data; boundary=${boundary}`);
-    return  this.http.post('https://pharmaciax-api.onrender.com/fileData/create',
+    return  this.http.post(`${environment.base_url}`+'fileData/create',
      formData, { headers: headers }).pipe();
     
   }
   getAll():Observable<any>{
-    return this.http.get("https://pharmaciax-api.onrender.com/fileData/all").pipe();
+    return this.http.get(`${environment.base_url}`+'fileData/all').pipe();
   }
  
   getFile(id:any):Observable<any>{
-    return this.http.get('https://pharmaciax-api.onrender.com/fileData/GetOne' + '/' + id)
+    return this.http.get(`${environment.base_url}`+'fileData/GetOne' + '/' + id)
   }
 getFileFromGoogle(url:any){
   //const headers = new HttpHeaders().set('X-Api-Key', 'AIzaSyB9ZdM_rTSbc7W5mafzDA8Maw7BuDr_Kfs');
@@ -72,18 +73,28 @@ getFileFromGoogle(url:any){
 }
   
   deleteFile(id:any){
-    return this.http.delete('https://pharmaciax-api.onrender.com/fileData/DeleteOne'+'/'+id).pipe();
+    return this.http.delete(`${environment.base_url}`+'fileData/DeleteOne'+'/'+id).pipe();
   }
  
   searchForFile(searchFile:SearchFiltre):Observable<File[]>{
-    return this.http.post<File[]>("https://pharmaciax-api.onrender.com/fileData/search",searchFile).pipe();
+    return this.http.post<File[]>(`${environment.base_url}`+"fileData/search",searchFile).pipe();
   }
 
   getFileStatus(){
-    return this.http.get("https://pharmaciax-api.onrender.com/File-status-List").pipe();
+    return this.http.get(`${environment.base_url}`+`${environment.inactive}`).pipe();
   }
 
   updateFile(file:any){
-    return this.http.put("https://pharmaciax-api.onrender.com/fileData/update", file).pipe(map(()=>file));
+    return this.http.put(`${environment.base_url}`+'fileData/update', file).pipe(map(()=>file));
+  }
+  getInactiveFiles(userId:number):Observable<any>{
+    const url=`${environment.base_url}`+'file-search-inactive'
+    const options={ params: { userId: userId} }
+    return this.http.get(url, options).pipe(
+      catchError(error => {
+        console.error('Error fetching inactive files', error);
+        return throwError(error);
+      })
+  )
   }
 }

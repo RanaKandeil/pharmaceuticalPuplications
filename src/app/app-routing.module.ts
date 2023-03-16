@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CategoryResolver } from './category.resolver';
 import { AdminPageComponent } from './component/admin-page/admin-page.component';
+import { ChangePasswordComponent } from './component/change-password/change-password.component';
 import { CreateFileComponent } from './component/create-file/create-file.component';
 import { CreateUserComponent } from './component/create-user/create-user.component';
 import { FileDetailsComponent } from './component/file-details/file-details.component';
@@ -31,6 +32,7 @@ const routes: Routes = [
     resolve:{category:CategoryResolver}},
   {path:'forgot-password',component:ForgotPasswordComponent},
   {path:'adminPage',component:AdminPageComponent,canActivate:[AdminGuard]},
+  {path:'change_password',component:ChangePasswordComponent,canActivate:[AuthGuard]},
   {path:'createUser',component:CreateUserComponent,canActivate:[AdminGuard]},
   {path:"user_details/:id",component:UserDetailsComponent,
   canActivate:[AdminGuard],resolve:{user:UserResolver}},

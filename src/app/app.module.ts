@@ -36,7 +36,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NgxEditorModule } from 'ngx-editor';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UpdateFileComponent } from './component/update-file/update-file.component';
-
+import { ChangePasswordComponent } from './component/change-password/change-password.component';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { UpdateFileComponent } from './component/update-file/update-file.compone
     LoadingComponent,
     FileDetailsComponent,
     UpdateFileComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +72,7 @@ import { UpdateFileComponent } from './component/update-file/update-file.compone
     BrowserAnimationsModule,
     PdfViewerModule,
     MatTooltipModule,
+    MatButtonModule,
     NgxEditorModule,
     ToastrModule.forRoot(
       {

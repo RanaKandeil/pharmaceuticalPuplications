@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Category } from '../interfaces/category';
 
 @Injectable({
@@ -13,18 +14,18 @@ export class CategoryService {
   countries:any;
  
   getCategories():Observable<any>{
-    return this.http.get("https://pharmaciax-api.onrender.com/CategoryList").pipe();
+    return this.http.get(`${environment.base_url}`+"CategoryList").pipe();
   }
 
   getCountries():Observable<any>{
-    return this.http.get("https://pharmaciax-api.onrender.com/countries").pipe();
+    return this.http.get(`${environment.base_url}`+"countries").pipe();
   }
   getRoleId(){
-    return this.http.get("https://pharmaciax-api.onrender.com/roles").pipe();
+    return this.http.get(`${environment.base_url}`+'roles').pipe();
   }
 
   getRoleById(id:any){
-    return this.http.get('https://pharmaciax-api.onrender.com/role' +'/' + id).pipe();
+    return this.http.get(`${environment.base_url}`+'role' +'/' + id).pipe();
   }
 }
 

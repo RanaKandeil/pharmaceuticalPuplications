@@ -16,7 +16,7 @@
           <div class="navbar-vertical-content scrollbar">
             <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
               <li class="nav-item">
-                <a (click)="showAll()" class="nav-link" role="button">
+                <a (click)="filterByActiveFile()" class="nav-link" role="button">
                   <div class="d-flex align-items-center">
                     <span class="nav-link-icon">
                       <span class="fas fa-chart-pie"></span>
@@ -59,14 +59,104 @@
              </span>
             </button>
           </div>
-          
+          <ul class="navbar-nav  align-items-center flex-row d-none  d-lg-block">
+            <li class="nav-item pt-1">
+              <div class="search-box d-flex">
+                <form class="position-relative " data-bs-toggle="search" >
+                  <input class="form-control search-input fs--1 " type="search" [ngModelOptions]="{standalone: true}" 
+                  placeholder="بحث بإسم القرار" [(ngModel)]="fileName" (keyup.enter)="filterByFileName()" />
+                  <span class="fas fa-search search-box-icon"></span>
+                </form>
+                <form class="position-relative" data-bs-toggle="search">
+                    <input class="form-control search-input fs--1 " type="search"  [ngModelOptions]="{standalone: true}"
+                    placeholder="بحث بتاريخ القرار"  [(ngModel)]="fileYear" (keyup.enter)="filterByFileYear()"/>
+                    <span class="fas fa-search search-box-icon"></span>
+                </form>
+                </div>
+                <div class="search-box d-flex">
+                <form class="position-relative " data-bs-toggle="search">
+                      <input class="form-control search-input fs--1" type="search" [ngModelOptions]="{standalone: true}"
+                      placeholder="بحث برقم القرار " [(ngModel)]="fileDocNo" (keyup.enter)="filterByFileDocNo()"/>
+                      <span class="fas fa-search search-box-icon"></span>
+                </form>
+                <form class="position-relative" data-bs-toggle="search" >
+                  <input class="form-control search-input fs--1 " type="search" [ngModelOptions]="{standalone: true}"
+                   placeholder="بحث بوصف القرار" [(ngModel)]="fileTxt" (keyup.enter)="filterByFileTxt()"/>
+                  <span class="fas fa-search search-box-icon"></span>
+                </form>
+              </div> 
+            </li>
+          </ul>
           <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+            <li class="nav-item pt-1">
+              <a *ngIf="(user.role_id === 1|| user.role_id === 2)" class="nav-link pe-3" role="button"  aria-haspopup="true" aria-expanded="false" >
+              <button (click)="showInactiveFiles()" class=" btn btn-warning rounded-pill btn-sm" type="button">
+                Inactive Files
+              </button></a>
+            </li>
             <li class="nav-item pt-1">
               <a *ngIf="(user.role_id === 1|| user.role_id === 2)" class="nav-link pe-3" role="button" routerLink="/createFile" aria-haspopup="true" aria-expanded="false" >
               <button class=" btn btn-secondary rounded-pill btn-sm" type="button">
                  <span class="p-1 bi-plus-circle-fill mt-auto"></span>إضافة ملف جديد
               </button></a>
             </li>
+            <!-- <li class="nav-item dropdown pt-2 pe-2">
+              <a class="nav-link" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <span style="font-weight:bolder ;font-size: 16px;">إسم القرار</span>
+              </a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownNotification">
+                <div class="bg-white dark__bg-1000 rounded-2 py-2">
+                  <a class="dropdown-item"  *ngFor="let file of files">
+                    <div (click)="filterByFileName(file.file_name)" class="row">
+                      <div class=" col-6" style="cursor: pointer;">{{file.file_name}} </div>
+                    </div>
+                  </a>   
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown pt-2 pe-2">
+              <a class="nav-link" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <span style="font-weight:bolder ;font-size: 16px;"> السنة</span>
+              </a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownNotification">
+                <div class="bg-white dark__bg-1000 rounded-2 py-2">
+                  <a class="dropdown-item"  *ngFor="let file of files">
+                    <div (click)="filterByYear(file.Year)" class="row">
+                      <div class=" col-6" style="cursor: pointer;">{{file.Year}} </div>
+                    </div>
+                  </a>   
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown pt-2 pe-2">
+              <a class="nav-link" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <span style="font-weight:bolder ;font-size: 16px;">وصف القرار</span>
+              </a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownNotification">
+                <div class="bg-white dark__bg-1000 rounded-2 py-2">
+                  <a class="dropdown-item"  *ngFor="let file of files">
+                    <div (click)="filterByTxt(file.txt)" class="row">
+                      <div class=" col-6" style="cursor: pointer;">{{file.txt}} </div>
+                    </div>
+                  </a>   
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown pt-2 pe-2">
+              <a class="nav-link" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <span style="font-weight:bolder ;font-size: 16px;">رقم القرار</span>
+              </a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownNotification">
+                <div class="bg-white dark__bg-1000 rounded-2 py-2">
+                  <a class="dropdown-item"  *ngFor="let file of files">
+                    <div (click)="filterByDocNo(file.Doc_No)" class="row">
+                      <div class=" col-6" style="cursor: pointer;">{{file.Doc_No}} </div>
+                    </div>
+                  </a>   
+                </div>
+              </div>
+            </li> -->
+            
             <li *ngIf="user.role_id == 1 || user.role_id == 2||user.role_id == 3" class="nav-item dropdown pt-2 pe-2">
               <a class="nav-link" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                 <span style="font-weight:bolder ;font-size: 16px;">الدولة</span>
@@ -79,6 +169,20 @@
                       <div class=" col-6">
                         <img style="width: 20px;height: 10px;justify-self:self-end;" [src]="country.flag">
                       </div>
+                    </div>
+                  </a>   
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown pt-2 pe-2">
+              <a class="nav-link" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <span style="font-weight:bolder ;font-size: 16px;">حالة القرار</span>
+              </a>
+              <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownNotification">
+                <div class="bg-white dark__bg-1000 rounded-2 py-2">
+                  <a class="dropdown-item"  *ngFor="let status of allStatus">
+                    <div (click)="filterByStatus(status.status_id)" class="row">
+                      <div class=" col-6" style="cursor: pointer;">{{status.status_name}} </div>
                     </div>
                   </a>   
                 </div>
@@ -99,9 +203,9 @@
                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                   <a *ngIf="(user.role_id == 1)" class="dropdown-item" routerLink="/adminPage"> المستخدمين </a>
                   <div *ngIf="(user.role_id == 1)" class="dropdown-divider"></div>
-                  <!-- <a class="dropdown-item">حسابي</a> -->
-                  <!-- <a class="dropdown-item">الإعدادات</a> -->
-                  <!-- <div class="dropdown-divider"></div> -->
+                  
+                  <a routerLink="/change_password" class="dropdown-item">تغيير كلمة المرور</a>
+                  <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="#" (click)="logout()">تسجيل الخروج</a>
                 </div>
               </div>
@@ -141,8 +245,9 @@
                           </ng-template>
                         </td>
                         <td>
-                          <button [disabled]="item.isAuthorized && user.role_id === 4"
-                          class="btn btn-outline-secondary" [routerLink]="['/file_details',item.File_data_id]">
+                            <button mat-raised-button [disabled]="(item.isAuthorized && user.role_id === 4)"
+                            [matTooltipDisabled]="!(item.isAuthorized && user.role_id === 4)" [matTooltip]="disabledTooltip"
+                            class="btn btn-outline-secondary " [routerLink]="['/file_details',item.File_data_id]">
                             preview
                           </button>
                         </td>
@@ -169,7 +274,7 @@
                   </nav>                  
                 </div> 
                 <div class="noFiles" *ngIf="loadedData && totalItems ==0">
-                  <h1>لا توجد ملفات</h1>
+                  <h3>لا توجد ملفات</h3>
                 </div>
               </div>
           </div>

@@ -1,16 +1,15 @@
 import { SocialAuthService } from '@abacritt/angularx-social-login';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Category, Subcategories } from 'src/app/interfaces/category';
+import { catchError, throwError } from 'rxjs';
+import { Category } from 'src/app/interfaces/category';
 import {  SearchFiltre } from 'src/app/interfaces/searchFile';
 import { AuthService } from 'src/app/services/auth.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { FileService } from 'src/app/services/file.service';
 import { LoadingService } from 'src/app/services/loading.service';
-import { ModalComponent } from '../modal/modal.component';
+
 
 @Component({
   selector: 'app-home',
@@ -29,7 +28,12 @@ export class HomeComponent implements OnInit {
  filesByCountryId:any;
  roles:any;
  loadedData:boolean= false
-
+ allStatus:any;
+ fileName:any;
+ fileYear:any;
+ fileDocNo:any;
+ fileTxt:any;
+ disabledTooltip = 'Button is disabled';
 
 
 
@@ -37,7 +41,7 @@ export class HomeComponent implements OnInit {
   constructor(private authService:AuthService,
     private router:Router, private loadingService:LoadingService,
     private googleService:SocialAuthService,private fileService:FileService,
-    public categoryService:CategoryService) { 
+    public categoryService:CategoryService,private http:HttpClient) { 
     }
 
     
@@ -62,6 +66,15 @@ export class HomeComponent implements OnInit {
       this.loadingService.hide();
     })
 
+    this.fileService.getFileStatus().subscribe(res=>{
+      this.loadingService.hide();
+      this.allStatus = res
+    },(error)=>{
+      this.loadingService.setError(error.message);
+      this.loadingService.hide()
+    })
+    
+
     this.categoryService.getCategories().subscribe({
       next:(res:any)=>{
         this.loadingService.hide();
@@ -78,7 +91,7 @@ export class HomeComponent implements OnInit {
       }
     })
 
-    this.showAll();
+    this.filterByActiveFile();
   }
 
   logout(){
@@ -117,8 +130,9 @@ export class HomeComponent implements OnInit {
   filterDataByCat(category:Category){
     const searchFilter: SearchFiltre = {
       category_id: category.cat_id,
-      country_id: this.user?.Country_id,
-      subcat_id:null,
+      // country_id: null,
+      //   subcat_id:null,
+      //   status_id:null,
     };
     
     this.searchForFiles(searchFilter);
@@ -128,7 +142,8 @@ export class HomeComponent implements OnInit {
     const searchObj:SearchFiltre = {
       subcat_id:subCategories.subcat_id,
       category_id: category.cat_id,
-      country_id :this.user?.Country_id
+      // country_id :null,
+      // status_id:null,
     };
     this.searchForFiles(searchObj)
   }
@@ -136,17 +151,67 @@ export class HomeComponent implements OnInit {
   filterDataByCountry(countryId:any){
     const searchObj:SearchFiltre ={
       country_id:countryId,
-      subcat_id:null,
-      category_id: null,
+      // category_id:null,
+      // subcat_id:null,
+      // status_id:null,
     };
     this.searchForFiles(searchObj)
   }
+
+  filterByStatus(statusId:any){
+    const searchObj:SearchFiltre={
+      status_id:statusId,
+      //  category_id:null,
+      //  subcat_id:null,
+      //  country_id:null,
+    };
+    this.searchForFiles(searchObj)
+  }
+
+  filterByFileName(){ 
+    const searchObj: SearchFiltre = {
+    file_name: this.fileName,
+  };
+  this.searchForFiles(searchObj);
+  this.fileName = '';
+}
+
+filterByFileYear(){ 
+  const searchObj: SearchFiltre = {
+  year: this.fileYear,
+};
+this.searchForFiles(searchObj);
+this.fileYear = '';
+}
+
+filterByFileDocNo(){
+    const searchObj: SearchFiltre = {
+      doc_no: this.fileDocNo,
+    };
+    this.searchForFiles(searchObj);
+    this.fileDocNo = '';
+   }
+  
+   filterByFileTxt(){
+    const searchObj: SearchFiltre = {
+      txt: this.fileTxt,
+    };
+    this.searchForFiles(searchObj);
+    this.fileTxt = '';
+    }
+    filterByActiveFile(){
+      const searchObj:SearchFiltre={
+        isactive:true
+      };
+      this.searchForFiles(searchObj)
+    }
 
   searchForFiles(searchFilter:SearchFiltre){
     this.loadingService.show();
     this.fileService.searchForFile(searchFilter).subscribe(result=>{
       this.loadingService.hide();
       this.files = result;
+      console.log(this.files)
       this.loadedData= true
      
       this.totalItems = this.files.length;
@@ -160,15 +225,27 @@ export class HomeComponent implements OnInit {
     }
     )
   }
-  showAll(){
-     this.fileService.getAll().subscribe({
-       next:res=>{
-        console.log(res)
-          this.files= res;
-          console.log(this.files)
-        this.totalItems = this.files.length;
-      },
-      error:error=>console.log(error)
-     })
-  }
+  // showAll(){
+  //    this.fileService.getAll().subscribe({
+  //      next:res=>{
+  //       console.log(res)
+  //         this.files= res;
+  //         console.log(this.files)
+  //       this.totalItems = this.files.length;
+  //     },
+  //     error:error=>console.log(error)
+  //    })
+  // }
+
+  showInactiveFiles(){
+    const userId = this.user.user_id
+    this.fileService.getInactiveFiles(userId).subscribe(res=>{
+      this.loadingService.hide();
+      console.log(res)
+    },(error) => {
+      this.loadingService.setError(error.message);
+      this.loadingService.hide()
+      ;})
+      
+   }
 }

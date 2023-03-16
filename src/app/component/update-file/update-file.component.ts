@@ -56,7 +56,7 @@ export class UpdateFileComponent implements OnInit {
       status_id:[''],
       file_desc:[''],
       isAuthorized:[''],
-      isactive:['']
+      isActive:['']
     })    
 
     this.categoryService.getCategories().subscribe(res=>{
@@ -92,7 +92,7 @@ export class UpdateFileComponent implements OnInit {
         subCategories:subCategoryIds ,
         file_desc:this.file.data?.file_desc,
         isAuthorized:this.file.data?.isAuthorized,
-        isactive:this.file.data?.isactive
+        isActive:this.file.data?.isactive
       },{ emitEvent: true })
     })
   
@@ -134,7 +134,7 @@ export class UpdateFileComponent implements OnInit {
       formData.append('txt_Eng', this.fileForm.get('txt_Eng')?.value);
       formData.append('Country_id', this.fileForm.get('Country_id')?.value);
       formData.append('isAuthorized',this.fileForm.get('isAuthorized')?.value);
-      formData.append('isactive',this.fileForm.get('isactive')?.value);
+      formData.append('isActive',this.fileForm.get('isActive')?.value);
       formData.append('Category_id', this.fileForm.get('Category_id')?.value);
       formData.append('subCategories', this.fileForm.get('subCategories')?.value);
       formData.append('status_id',this.fileForm.get('status_id')?.value);
