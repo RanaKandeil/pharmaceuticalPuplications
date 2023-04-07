@@ -15,6 +15,7 @@ user:any;
 pdfSrc!: string;
 page: number = 1;
 subObj:any = "";
+pdfLoading: boolean = true;
   constructor(private route:ActivatedRoute,
      private fileService:FileService,
      private router: Router,
@@ -38,7 +39,7 @@ subObj:any = "";
     const FileId = this.route.snapshot.paramMap.get('id')
     this.fileService.getFile(FileId).subscribe((res:any)=>{
       this.file = res
-     
+      this.pdfLoading = true
       const subArr =this.file.data.subCategories 
       subArr.forEach((subcat:any) => {
         this.subObj += subcat?.SubCategory_name
@@ -48,11 +49,12 @@ subObj:any = "";
    
       const url = `https://pharmaciax-api.onrender.com/apigoogle/${filePath}`;
       this.fileService.getFileFromGoogle(url)
-    .subscribe(blob => {
-      const pdfBlob = new Blob([blob], { type: 'application/pdf' });
-      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(pdfBlob));
-      console.log(this.pdfUrl)
-    });
+     .subscribe(blob => {
+        const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(pdfBlob));
+        console.log(this.pdfUrl)
+        this.pdfLoading = false
+     }); 
     });
   }
   delete(id:any){

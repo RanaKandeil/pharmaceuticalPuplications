@@ -1,11 +1,16 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs';
 import { Subcategories } from 'src/app/interfaces/category';
 import { CategoryService } from 'src/app/services/category.service';
 import { FileService } from 'src/app/services/file.service';
+import Quill from 'quill'
+import BlotFormatter from 'quill-blot-formatter'
+
+Quill.register('modules/blotFormatter', BlotFormatter)
 
 
 @Component({
@@ -27,13 +32,29 @@ export class UpdateFileComponent implements OnInit {
  file:any;
  filePath:any
  subObj:any;
+ pdfUrl:any
+ filePathString:any;
+ quillEditorModules = {}
+ pdfLoading: boolean = true;
  @ViewChild('fileInput') fileInput!: ElementRef;
+ get f() { return this.fileForm.controls; }
 
 
   constructor(private categoryService:CategoryService,
      private fileService:FileService, private fb:FormBuilder,
-     private route:ActivatedRoute,private router:Router, private toastr:ToastrService) { 
+     private route:ActivatedRoute,private router:Router,
+      private toastr:ToastrService,private sanitizer: DomSanitizer) { 
      
+        this.quillEditorModules = {
+         toolbar:[
+           [{'font':[]}],
+           ['bold','italic','underline'],
+           [{'list':'ordered'},{'list':'bullet'}],
+           [{'color':[]},{'background':[]}],
+           ['link','image']
+         ],
+         blotFormatter: {}
+       }
      }
 
   ngOnInit(): void {
@@ -42,27 +63,25 @@ export class UpdateFileComponent implements OnInit {
     this.userId = userlogged.user_id
     this.fileForm = this.fb.group({
       File_data_id:[''],
-      file_name:[''],
-      Doc_No:[''],
-      Year: [''],
-      txt_Ar:[''],
-      txt_Eng:[''],
-      fileID:[''],
-      Country_id:[''],
-      Category_id:[''],
-      subCategories:[[]],
+      file_name:['',Validators.required],
+      Doc_No:['', Validators.required],
+      Year: ['' ,Validators.required],
+      txt_Ar:['',Validators.required],
+      txt_Eng:['',Validators.required],
+      fileID:['',Validators.required],
+      Country_id:['',Validators.required],
+      Category_id:['',Validators.required],
+      subCategories:[[],Validators.required],
       createdByID : [this.userId],
       UpdatedbyID: [this.userId],
-      status_id:[''],
-      file_desc:[''],
+      status_id:['',Validators.required],
+      file_desc:['',Validators.required],
       isAuthorized:[''],
       isActive:['']
     })    
 
     this.categoryService.getCategories().subscribe(res=>{
       this.categories = res;
-      //console.log(this.categories)
-      
     })
 
     this.categoryService.getCountries().subscribe(res=>{
@@ -76,10 +95,23 @@ export class UpdateFileComponent implements OnInit {
     this.fileService.getFile(this.fileId).subscribe(res=>{
       this.file = res;
       console.log(this.file);
+      this.pdfLoading = true;
+      const filePathString = this.file?.data?.fileID;
+   
+      const url = `https://pharmaciax-api.onrender.com/apigoogle/${filePathString}`;
+      this.fileService.getFileFromGoogle(url)
+    .subscribe(blob => {
+      const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(pdfBlob));
+      console.log(this.pdfUrl)
+      this.pdfLoading = false;
+    });
       
       this.subCategoriesArr = this.file.data?.subCategories;
    
       const subCategoryIds = this.subCategoriesArr.map(subCategory => subCategory.subcat_id);
+
+      
       this.fileForm.patchValue({
         file_name:this.file.data?.file_name,
         Year:this.file.data?.Year,
@@ -95,7 +127,32 @@ export class UpdateFileComponent implements OnInit {
         isActive:this.file.data?.isactive
       },{ emitEvent: true })
     })
+
+    
+  }
+  onImageChangeFromFile(event: any) {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
   
+    if (file.type !== 'application/pdf') {
+        this.fileForm.reset();
+        this.fileForm.get('fileID')?.setValidators([Validators.required]);
+      this.fileForm.get('fileID')?.updateValueAndValidity();
+    } 
+    else {
+      const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
+      if (file.size > MAX_FILE_SIZE) {
+        this.fileForm.reset();
+        this.fileForm.get('fileID')?.setValidators([Validators.required, Validators.max(MAX_FILE_SIZE)]);
+        this.fileForm.get('fileID')?.updateValueAndValidity();
+      } else {
+        this.fileForm.get('fileID')?.clearValidators();
+        this.fileForm.get('fileID')?.updateValueAndValidity();
+        this.filePath = file;
+      }
+    }
   }
    
   
@@ -120,9 +177,9 @@ export class UpdateFileComponent implements OnInit {
     let objects = subCategories.map((item:any) => {return {"subcat_id":item}});
     this.fileForm.get('subCategories')?.setValue(JSON.stringify(objects));
   
-    const fileInput = this.fileInput?.nativeElement;
-    if (fileInput.files && fileInput.files[0]) {
-       this.filePath = fileInput.files[0]}
+    // const fileInput = this.fileInput?.nativeElement;
+    // if (fileInput.files && fileInput.files[0]) {
+    //    this.filePath = fileInput.files[0]}
 
       const formData = new FormData();
       formData.append('file', this.filePath || null);

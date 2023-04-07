@@ -34,39 +34,42 @@
           <div class="row flex-between-end">
             <div class="col-auto align-self-center">
               <h3 class="mb-0" data-anchor="data-anchor" id="basic-form">
-                  تعديل تفاصيل القرار
+                  تعديل تفاصيل المستند
               </h3>
             </div>
           </div>
         </div>
         <div class="card-body bg-light">
-          <div class="tab-content">
-            <div
-              class="tab-pane preview-tab-pane active"
-              role="tabpanel"
-              aria-labelledby="tab-dom-160a4566-7e94-45a2-bf04-b36ef49d954f"
-              id="dom-160a4566-7e94-45a2-bf04-b36ef49d954f"
-            >
               <form [formGroup]="fileForm" (ngSubmit)="update()">
-                <div class="mb-3">
-                  <label class="form-label" for="file_name">إسم القرار</label>
-                  <input
-                    formControlName="file_name"
-                    class="form-control"
-                    type="text"/>
+                <div class="row mb-4">
+                  <div class="col-2 text-center">
+                     <label class="form-label" for="file_name">إسم المستند</label>
+                  </div>
+                  <div class="col-4">
+                    <input
+                      required
+                      formControlName="file_name"
+                      class="form-control"
+                      type="text"/>
+                  </div>
+                
+                  <div class="col-2 text-center">
+                   <label class="form-label" for="Doc_No">رقم المستند</label>
+                  </div>
+                  <div class="col-4">
+                    <input
+                      required
+                      formControlName="Doc_No"
+                      class="form-control"
+                      type="text"/>
+                  </div>
                 </div>
-                <div class="mb-3">
-                  <label class="form-label" for="Doc_No">رقم القرار</label>
-                  <input
-                    formControlName="Doc_No"
-                    class="form-control"
-                    type="text"/>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="Year">سنة إصدار القرار</label>
+                <div class="mb-5 text-center">
+                  <label class="form-label" for="Year">تاريخ الإصدار</label>
                   <div class="p-fluid p-grid p-formgrid">
-                      <div class="p-field p-col-12">
+                      <div class="p-field p-col-10">
                           <p-calendar
+                          [required]="true"
                           formControlName="Year"
                             view="year"
                             dateFormat="yy"
@@ -76,89 +79,155 @@
                       </div>
                   </div>
                 </div>
-                <div class="mb-3">
-                  <label class="form-label" for="txt_Ar">وصف القرار</label>
-                  <input
-                  formControlName="txt_Ar"
-                    class="form-control"
-                    type="text"/>
+                <div class="row mb-5">
+                  <div class="col-2 text-center ">
+                      <label class="form-label" for="txt_Ar"> كلمات مفتاحية عربي</label>
+                  </div>
+                  <div class="col-4">
+                      <input
+                      required
+                      formControlName="txt_Ar"
+                        class="form-control"
+                        type="text"/>
+                  </div>
+                
+                  <div class="col-2 text-center">
+                    <label class="form-label" for="txt_Eng">كلمات مفتاحية إنجليزي</label>
+                  </div>
+                  <div class="col-4">
+                    <input 
+                    required
+                    formControlName="txt_Eng"
+                    class="form-control"  
+                    type="text" />
+                  </div>
                 </div>
-                <div class="mb-3">
-                  <label class="form-label" for="txt_Eng"
-                    >Description</label>
-                  <input 
-                  formControlName="txt_Eng"
-                  class="form-control"  
-                  type="text" />
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="file_Path">إختيار الملف</label>
+                <!-- <div class="mb-3">
+                  <label class="form-label" for="fileID">إختيار الملف</label>
                   <input #fileInput
                    formControlName="fileID"
                   class="form-control" 
                   type="file" />
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="status_id">حالة القرار</label> 
-                  <ng-select
-                    formControlName="status_id"
-                    class="form-control ngSelect"
-                    [clearOnBackspace]="true"
-                    [searchable]="true">
-                    <ng-option *ngFor="let status of allStatus" [value]="status.status_id" >{{status.status_name}}</ng-option>
-                  </ng-select>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="Country_id"> دولة إصدار القرار</label>
-                  <ng-select
-                    formControlName="Country_id"
-                    class="form-control ngSelect"
-                    [clearOnBackspace]="true"
-                    [searchable]="true"	>
-                    <ng-option *ngFor="let country of countries" [value]="country.id" >{{country.country_name}}</ng-option>
-                  </ng-select>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="Category_id"> فئة القرار الرئيسية</label>
-                  <ng-select [(ngModel)]="selectedCategory"
-                    [searchable]="true"	
-                    (change)="onChange()"
-                    formControlName="Category_id"
-                    class="form-control ngSelect">
-                    <ng-option *ngFor="let category of categories" [value]="category.cat_id" >{{category.Category_name}}</ng-option>
-                  </ng-select>
-                </div>
-              
-                <div class="mb-3">
-                  <label class="form-label ngSelect" for="subCategories">إختيار فئة القرار الفرعية</label>
-                  <ng-select  class="form-control ngSelect" 
-                     [searchable]="true" 
-                     [multiple]="true"
+                </div> -->
+                <div class="row mb-4">
+                  <div class="col-2 text-center align-items-center">
+                   <label class="form-label" for="file_Path" style="margin-top: 100px;">إختيار الملف</label>
+                  </div>
+                  <div class="col-4">
+                    <input #fileInput 
+                    style="margin-top: 100px;"
+                    [required]="true"  
+                    (change)="onImageChangeFromFile($event)"
+                    class="form-control" 
+                    formControlName="fileID"
+                    type="file" 
+                    accept="application/pdf"/>
+                    <div *ngIf="f['fileID'].touched && f['fileID'].errors" class=" alert alert-danger">
+                      <div *ngIf="f['fileID'].errors?.['required']">This Field Is Required And Only Pdf File Allowed</div>
+                      <div *ngIf="f['fileID'].errors?.['max']">File size must be less than 10MB.</div>
+                    </div>
+                  </div>
+                  <!-- <div class=" col-6 card-body bg-light">
+                    <iframe [src]="pdfUrl" width="100%" height="200"></iframe>
+                  </div> -->
+                  <div class="col-6 card-body bg-light">
+                    <ng-container *ngIf="pdfLoading; else pdfContent">
+                      <div class="text-center">
+                        <i class="fa fa-spinner fa-spin fa-4x"></i>
+                        <p>Loading PDF...</p>
+                      </div>
+                    </ng-container>
+                    <ng-template #pdfContent>
+                      <iframe [src]="pdfUrl" width="100%" height="200"></iframe>
+                    </ng-template>
+                  </div>
                   
-                    formControlName="subCategories" [closeOnSelect]="false">
-                    <ng-option *ngFor="let sub of subCategoriesArr" [value]="sub.subcat_id" >{{sub.SubCategory_name}}</ng-option>
-                    
-                  </ng-select>
+                </div>
+                <div class="row mb-5">
+                  <div class="col-2 text-center">
+                    <label class="form-label" for="file_desc" style="margin-top: 125px;"> وصف المستند</label>
+                  </div>
+                  <div class="col-10">
+                    <quill-editor
+                      [styles]="{height: '250px', backgroundColor:'#faf8f8'}"
+                      formControlName="file_desc"
+                      [modules]="quillEditorModules">
+                    </quill-editor>
+                  </div>
+                </div>
+                <div class="mb-5 row">
+                  <div class="col-2 text-center">
+                    <label class="form-label" for="status_id">حالة المستند</label> 
+                  </div>
+                  <div class="col-4">
+                      <ng-select
+                        [required]="true"
+                        formControlName="status_id"
+                        class="form-control ngSelect"
+                        [clearOnBackspace]="true"
+                        [searchable]="true">
+                        <ng-option *ngFor="let status of allStatus" [value]="status.status_id" >{{status.status_name}}</ng-option>
+                      </ng-select>
+                  </div>
+                  <div class="col-2 text-center">
+                   <label class="form-label" for="Country_id"> الدولة</label>
+                  </div>
+                  <div class="col-4">
+                      <ng-select
+                        [required]="true"
+                        formControlName="Country_id"
+                        class="form-control ngSelect"
+                        [clearOnBackspace]="true"
+                        [searchable]="true"	>
+                        <ng-option *ngFor="let country of countries" [value]="country.id" >{{country.country_name}}</ng-option>
+                      </ng-select>
+                  </div>
+                </div>
+
+                <div class="mb-5 row">
+                  <div class="col-2 text-center">
+                      <label class="form-label" for="Category_id">التصنيف الرئيسي</label>
+                  </div>
+                  <div class="col-4">
+                      <ng-select [(ngModel)]="selectedCategory"
+                        [searchable]="true"	
+                        (change)="onChange()"
+                        [required]="true"
+                        formControlName="Category_id"
+                        class="form-control ngSelect">
+                        <ng-option *ngFor="let category of categories" [value]="category.cat_id" >{{category.Category_name}}</ng-option>
+                      </ng-select>
+                  </div>
+                  <div class="col-2 text-center">
+                    <label class="form-label ngSelect" for="subCategories"> التصنيف الفرعي</label>
+                  </div>
+                  <div class="col-4">
+                      <ng-select  class="form-control ngSelect" 
+                        [searchable]="true" 
+                        [multiple]="true"
+                        [required]="true"
+                        formControlName="subCategories" [closeOnSelect]="false">
+                        <ng-option *ngFor="let sub of subCategoriesArr" [value]="sub.subcat_id" >{{sub.SubCategory_name}}</ng-option> 
+                      </ng-select>
+                  </div>
                 </div>
                 <div class="row mb-3">
-                  <div class="col-6">
-                    <label class="form-label" for="isAuthorized">? Authorized file</label>
+                  <div class="col-6 text-center">
+                    <label class="form-label" for="isAuthorized"> Authorized file</label>
                     <br>
                     <input  formControlName="isAuthorized" type="checkbox"/>
                   </div>
-                  <div class="col-6">
-                    <label class="form-label">? Active</label>
+                  <div class="col-6 text-center">
+                    <label class="form-label"> Active</label>
                     <br>
                     <input formControlName="isActive" type="checkbox">
                   </div>
                   </div>
                 <div class="d-flex justify-content-between">
-                  <button class="btn btn-primary" type="submit">حفظ</button>
+                  <button class="btn btn-primary" [disabled]="!fileForm.valid" type="submit">حفظ</button>
                   <button class="btn btn-danger ms-4" type="button" (click)="cancel()" >إلغاء</button>
                 </div>
               </form>
-            </div>
-          </div>
         </div>
       </div>
       <footer class="footer">

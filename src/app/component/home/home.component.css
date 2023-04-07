@@ -54,7 +54,9 @@
     opacity: 1 !important;
     pointer-events: auto !important;
   }
- 
+ .ngSelect{
+  padding: 0;
+ }
 
   /* .tooltip::before {
     content: attr(data-tooltip);

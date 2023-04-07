@@ -1,11 +1,12 @@
 export interface SearchFiltre{
-    country_id?: number ,
+    country_id: number|null ,
     category_id?: number,
     subcat_id?:number,
-    file_name?: string,
-    year?: number,
-    doc_no?: number,
-    txt?:string,
-    status_id?:number,
+    file_name: string|null,
+    year: number|null,
+    doc_no: number|null,
+    txt:string|null,
+    status_id:number|null,
     isactive?:boolean,
+    
 }

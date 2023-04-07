@@ -1,14 +1,16 @@
 import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, throwError } from 'rxjs';
 import { Category } from 'src/app/interfaces/category';
 import {  SearchFiltre } from 'src/app/interfaces/searchFile';
 import { AuthService } from 'src/app/services/auth.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { FileService } from 'src/app/services/file.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { DatePipe } from '@angular/common';
+
 
 
 @Component({
@@ -22,7 +24,7 @@ export class HomeComponent implements OnInit {
  categories: Category[] = [];
  files:any;
  page = 1;
- pageSize = 2;
+ pageSize = 10;
  totalItems = 0;
  imageUrl:any;
  filesByCountryId:any;
@@ -33,7 +35,20 @@ export class HomeComponent implements OnInit {
  fileYear:any;
  fileDocNo:any;
  fileTxt:any;
+ showActiveFilesTable = true;
+ inactiveFiles:any[]=[]
  disabledTooltip = 'Button is disabled';
+ searchForm:any;
+ allFiles:any;
+ selectedCategory:any;
+ subCategoriesArr:any;
+ countryFlag:any;
+ selectedCategoryIndex!: any;
+ selectedSubcategoryIndex!: any;
+ activeFileFilter = false;
+ datePipe = new DatePipe('en-US');
+ 
+ 
 
 
 
@@ -41,18 +56,28 @@ export class HomeComponent implements OnInit {
   constructor(private authService:AuthService,
     private router:Router, private loadingService:LoadingService,
     private googleService:SocialAuthService,private fileService:FileService,
-    public categoryService:CategoryService,private http:HttpClient) { 
+    public categoryService:CategoryService,private http:HttpClient,private fb:FormBuilder) { 
     }
 
     
 
   ngOnInit(): void {
+    this.searchForm= this.fb.group({
+      File_name:[''],
+      Year:[''],
+      Doc_no:[''],
+      Txt:[''],
+      Status_id:[''],
+      category_id:[''],
+      subcat_id:['']
+    })
+
      this.user = JSON.parse(localStorage.getItem("user")!)
      
      const userRoleId = this.user.role_id
      this.categoryService.getRoleById(userRoleId).subscribe((res:any)=>{
       this.roles = res
-      console.log(this.roles)
+  
      })
 
      this.loadingService.show()
@@ -83,7 +108,7 @@ export class HomeComponent implements OnInit {
             {subcat_id: 1, isActive: true},
             {subcat_id: 2, isActive: false}
           ];
-          console.log(JSON.stringify(subCategories))
+       
       },
       error:  (error:any) => {
         this.loadingService.setError(error.message);
@@ -91,7 +116,12 @@ export class HomeComponent implements OnInit {
       }
     })
 
-    this.filterByActiveFile();
+    this.showAll();
+  }
+
+  getCountryFlag(countryId: number): string {
+    const country = this.countries?.find((c:any) => c.id === countryId);
+    return country ? country.flag : '';
   }
 
   logout(){
@@ -125,95 +155,133 @@ export class HomeComponent implements OnInit {
        this.page = page;
      }
   }
+  
+
+  filterDataByCountry(countryId:any){
+    this.user.Country_id = countryId;
+    localStorage.setItem("user",JSON.stringify(this.user));
+    const searchObj:SearchFiltre={
+         country_id: countryId,
+         status_id:null,
+         file_name:null,
+         year:null,
+         txt:null,
+         doc_no:null,
+    };
+
+    this.searchForFiles(searchObj)
+  }
 
 
-  filterDataByCat(category:Category){
+  filterDataByCat(category:Category,index:number){
     const searchFilter: SearchFiltre = {
       category_id: category.cat_id,
-      // country_id: null,
-      //   subcat_id:null,
-      //   status_id:null,
+         country_id: this.user.Country_id,
+         status_id:null,
+         file_name:null,
+         year:null,
+         txt:null,
+         doc_no:null,
     };
     
     this.searchForFiles(searchFilter);
+    this.selectedCategoryIndex = index;
+    this.selectedSubcategoryIndex = null;
+    this.removeActiveFileFilter();
   }
+ 
 
   filterDataBySub(category:any,subCategories:any){
     const searchObj:SearchFiltre = {
       subcat_id:subCategories.subcat_id,
       category_id: category.cat_id,
-      // country_id :null,
-      // status_id:null,
-    };
-    this.searchForFiles(searchObj)
-  }
-  
-  filterDataByCountry(countryId:any){
-    const searchObj:SearchFiltre ={
-      country_id:countryId,
-      // category_id:null,
-      // subcat_id:null,
-      // status_id:null,
-    };
-    this.searchForFiles(searchObj)
-  }
-
-  filterByStatus(statusId:any){
-    const searchObj:SearchFiltre={
-      status_id:statusId,
-      //  category_id:null,
-      //  subcat_id:null,
-      //  country_id:null,
-    };
-    this.searchForFiles(searchObj)
-  }
-
-  filterByFileName(){ 
-    const searchObj: SearchFiltre = {
-    file_name: this.fileName,
-  };
-  this.searchForFiles(searchObj);
-  this.fileName = '';
-}
-
-filterByFileYear(){ 
-  const searchObj: SearchFiltre = {
-  year: this.fileYear,
-};
-this.searchForFiles(searchObj);
-this.fileYear = '';
-}
-
-filterByFileDocNo(){
-    const searchObj: SearchFiltre = {
-      doc_no: this.fileDocNo,
+       country_id :this.user.Country_id,
+       status_id:null,
+       file_name:null,
+       year:null,
+       doc_no:null,
+       txt:null
     };
     this.searchForFiles(searchObj);
-    this.fileDocNo = '';
-   }
+    this.selectedCategoryIndex = category.id;
+    this.selectedSubcategoryIndex = subCategories.subcat_id;
+    this.removeActiveFileFilter();
+  }
+
   
-   filterByFileTxt(){
-    const searchObj: SearchFiltre = {
-      txt: this.fileTxt,
-    };
-    this.searchForFiles(searchObj);
-    this.fileTxt = '';
+  
+     
+    filterBySearchForm(){
+      const searchObj:SearchFiltre={
+        file_name:this.searchForm.get('File_name')?.value,
+        year:this.searchForm.get('Year')?.value,
+        doc_no:this.searchForm.get('Doc_no')?.value,
+        txt:this.searchForm.get('Txt')?.value,
+        country_id:this.user.Country_id,
+        status_id:this.searchForm.get('Status_id')?.value,
+        category_id:this.searchForm.get('category_id')?.value,
+        subcat_id:this.searchForm.get('subcat_id')?.value,
+
+
+      };
+
+      console.log(searchObj)
+      this.searchForFiles(searchObj);
+      this.activeFileFilter = true
+    
     }
+
+    clearAll(){
+      this.searchForm.get('File_name').setValue('');
+      this.searchForm.get('Year').setValue('');
+      this.searchForm.get('Doc_no').setValue('');
+      this.searchForm.get('Txt').setValue('');
+      this.searchForm.get('Status_id').setValue('');
+      this.searchForm.get('category_id').setValue('');
+      this.searchForm.get('subcat_id').setValue('');
+    }
+
+
     filterByActiveFile(){
       const searchObj:SearchFiltre={
-        isactive:true
+        isactive:true,
+        country_id: this.user.Country_id,
+        status_id:null,
+        file_name:null,
+        year:null,
+        doc_no:null,
+        txt:null
       };
-      this.searchForFiles(searchObj)
+     
+      this.searchForFiles(searchObj);
+      this.activeFileFilter=true
+    }
+
+    removeActiveFileFilter() {
+      this.activeFileFilter = false;
+    }
+    
+    showAll(){
+      const searchObj:SearchFiltre={
+        isactive:true,
+        country_id: this.user.Country_id,
+        status_id:null,
+        file_name:null,
+        year:null,
+        doc_no:null,
+        txt:null
+      };
+      this.searchForFiles(searchObj),
+      this.activeFileFilter = true;
+
     }
 
   searchForFiles(searchFilter:SearchFiltre){
     this.loadingService.show();
     this.fileService.searchForFile(searchFilter).subscribe(result=>{
       this.loadingService.hide();
-      this.files = result;
-      console.log(this.files)
+      this.files=result;
       this.loadedData= true
-     
       this.totalItems = this.files.length;
       this.getDataForPage()
       this.goToPage(1);
@@ -225,27 +293,44 @@ filterByFileDocNo(){
     }
     )
   }
-  // showAll(){
-  //    this.fileService.getAll().subscribe({
-  //      next:res=>{
-  //       console.log(res)
-  //         this.files= res;
-  //         console.log(this.files)
-  //       this.totalItems = this.files.length;
-  //     },
-  //     error:error=>console.log(error)
-  //    })
-  // }
+  
+  
+  
+
+  onChange(){
+    for(const c of this.categories){
+      if(c.cat_id ===this.selectedCategory){
+        this.subCategoriesArr = c.subcategories;
+      }
+    }
+  }
 
   showInactiveFiles(){
+    this.showActiveFilesTable = !this.showActiveFilesTable;
+    console.log(this.showActiveFilesTable)
     const userId = this.user.user_id
-    this.fileService.getInactiveFiles(userId).subscribe(res=>{
-      this.loadingService.hide();
-      console.log(res)
-    },(error) => {
-      this.loadingService.setError(error.message);
-      this.loadingService.hide()
-      ;})
-      
+    if(!this.showActiveFilesTable){
+      this.fileService.getInactiveFiles(userId).subscribe(res=>{
+        this.loadingService.hide();
+        console.log(res)
+        this.inactiveFiles= res
+        this.loadedData= true
+     
+      this.totalItems = this.inactiveFiles.length;
+      this.getDataForPage()
+      this.goToPage(1);
+  
+      },(error) => {
+        this.loadingService.setError(error.message);
+        this.loadingService.hide()
+        ;})
+    }   
    }
+   getInactiveFilesForPage() {
+    if (this.inactiveFiles) {
+      const startIndex = (this.page - 1) * this.pageSize;
+      return this.inactiveFiles.slice(startIndex, startIndex + this.pageSize);
+    }
+    return [];
+  }
 }

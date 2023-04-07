@@ -38,6 +38,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { UpdateFileComponent } from './component/update-file/update-file.component';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
 import {MatButtonModule} from '@angular/material/button';
+import { DatePipe } from '@angular/common';
+import { QuillModule } from 'ngx-quill';
+
+
 
 @NgModule({
   declarations: [
@@ -74,6 +78,7 @@ import {MatButtonModule} from '@angular/material/button';
     MatTooltipModule,
     MatButtonModule,
     NgxEditorModule,
+    QuillModule.forRoot(),
     ToastrModule.forRoot(
       {
         timeOut: 10000,
@@ -105,7 +110,7 @@ import {MatButtonModule} from '@angular/material/button';
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
       multi: true
-    }
+    },DatePipe
   ],
   bootstrap: [AppComponent]
 })

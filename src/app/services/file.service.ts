@@ -66,6 +66,7 @@ export class FileService {
   getFile(id:any):Observable<any>{
     return this.http.get(`${environment.base_url}`+'fileData/GetOne' + '/' + id)
   }
+  
 getFileFromGoogle(url:any){
   //const headers = new HttpHeaders().set('X-Api-Key', 'AIzaSyB9ZdM_rTSbc7W5mafzDA8Maw7BuDr_Kfs');
  return this.http.get(url,  { responseType: 'blob' })

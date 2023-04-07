@@ -1,10 +1,15 @@
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Category, Subcategories } from 'src/app/interfaces/category';
 import { CategoryService } from 'src/app/services/category.service';
 import { FileService } from 'src/app/services/file.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { QuillModule } from 'ngx-quill';
+import Quill from 'quill'
+import BlotFormatter from 'quill-blot-formatter'
+
+Quill.register('modules/blotFormatter', BlotFormatter)
 
 
 @Component({
@@ -21,9 +26,27 @@ export class CreateFileComponent implements OnInit {
   subCategoriesArr!:Subcategories[];
   allStatus:any;
   filePath:any;
+  quillEditorModules = {}
+  submitted = false;
+  get f() { return this.fileForm.controls; }
+
   constructor(private fb:FormBuilder,private fileService:FileService,
      private categoryService:CategoryService,private toastr: ToastrService,
-     private router:Router) {}
+     private router:Router) {
+      // this.quillEditorModules = {
+      //   toolbar:[
+      //     [{'font':[]}],
+      //     ['bold','italic','underline'],
+      //     [{'list':'ordered'},{'list':'bullet'}],
+      //     [{'color':[]},{'background':[]}],
+      //     ['link','image']
+      //   ],
+      //   blotFormatter: {}
+      // }
+      this.quillEditorModules = {
+        blotFormatter: {}
+      }
+     }
      
       
 
@@ -31,25 +54,26 @@ export class CreateFileComponent implements OnInit {
     const userlogged = JSON.parse(localStorage.getItem('user')!)
     this.userId = userlogged.user_id
     this.fileForm = this.fb.group({
-      file_name:[''],
-      Doc_No:[''],
-      Year: [''],
-      txt_Ar:[''],
-      txt_Eng:[''],
-      Country_id:[''],
-      Category_id:[''],
-      subCategories:[[]],
+      file_name:['',Validators.required],
+      Doc_No:['',Validators.required],
+      Year: ['',Validators.required],
+      txt_Ar:['',Validators.required],
+      txt_Eng:['',Validators.required],
+      Country_id:['',Validators.required],
+      Category_id:['',Validators.required],
+      subCategories:[[],Validators.required],
       createdByID : [this.userId],
       UpdatedbyID: [this.userId],
-      status_id:[''],
-      file_desc:[''],
+      file:['',Validators.required],
+      status_id:['',Validators.required],
+      file_desc:['',Validators.required],
       isAuthorized:[false],
-    });
-    // this.fileForm.get('isactive')?.valueChanges.subscribe((value) => {
-    //   const newValue = value === false ? 0 : 1;
-    //   this.fileForm.get('isactive')?.patchValue(newValue, { emitEvent: false });
-    // });    
-    
+    }); 
+
+    const isAuthorizedControl = this.fileForm.get('isAuthorized');
+  
+  // Set the initial value of isAuthorized to 1
+     isAuthorizedControl?.setValue(false);
     this.categoryService.getCategories().subscribe((res:any)=>{
       this.categories = res
     })
@@ -60,29 +84,31 @@ export class CreateFileComponent implements OnInit {
       this.allStatus=res
     })
   }
-  // createFile(){
-  //   let year = this.fileForm.get('Year')!.value;
-  //   let dateString = new Date(year).getFullYear().toString();
-  //   this.fileForm.get('Year')!.setValue(dateString);
 
-  //   let subCategories = this.fileForm.get('subCategories')?.value;
-  //   let objects = subCategories.map((item:any) => {return {"subcat_id":item}});
-  //   this.fileForm.get('subCategories')?.setValue(objects)
-
-    
-  //   let formValue: Record<string, any> = {};
-  //   Object.keys(this.fileForm.controls).forEach(key => {
-  //     formValue[`${key}`] = this.fileForm.get(key)?.value;});
-  //   console.log(formValue)
-
-
-  //   this.fileService.createFile(formValue).subscribe(res=>{
-  //     this.toastr.success('File Added Successfully!', 'Success');
-      
-  //       },
-  //   error=>{ this.toastr.error('Error In Creating File', 'Error');}
-  //   )
-  // }
+  onImageChangeFromFile(event: any) {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+  
+    if (file.type !== 'application/pdf') {
+        this.fileForm.reset();
+        this.fileForm.get('file')?.setValidators([Validators.required]);
+      this.fileForm.get('file')?.updateValueAndValidity();
+    } 
+    else {
+      const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
+      if (file.size > MAX_FILE_SIZE) {
+        this.fileForm.reset();
+        this.fileForm.get('file')?.setValidators([Validators.required, Validators.max(MAX_FILE_SIZE)]);
+        this.fileForm.get('file')?.updateValueAndValidity();
+      } else {
+        this.fileForm.get('file')?.clearValidators();
+        this.fileForm.get('file')?.updateValueAndValidity();
+        this.filePath = file;
+      }
+    }
+  }
 
   cancel(){
     this.router.navigate(['/home'])
@@ -95,9 +121,25 @@ export class CreateFileComponent implements OnInit {
       }
     }
   }
+  onIsAuthorizedChange(event: Event) {
+    const isAuthorizedControl = this.fileForm.get('isAuthorized');
+    const isChecked = (event.target as HTMLInputElement).checked;
+    isAuthorizedControl?.setValue(isChecked ? true : false);
+    if (!isChecked) {
+      isAuthorizedControl?.setValue(false);
+    }
+  }
+    
 
   @ViewChild('fileInput') fileInput!: ElementRef;
   onFileUpload() {
+    this.submitted = true;
+  // stop here if form is invalid
+  if (this.fileForm.invalid) {
+      return;
+  }
+  if(this.submitted)
+  {
     let subCategories = this.fileForm.get('subCategories')?.value;
     let objects = subCategories.map((item:any) => {return {"subcat_id":item}});
     this.fileForm.get('subCategories')?.setValue(JSON.stringify(objects))
@@ -106,9 +148,7 @@ export class CreateFileComponent implements OnInit {
     let dateString = new Date(year).getFullYear();
     this.fileForm.get('Year')!.setValue(dateString);
 
-    const fileInput = this.fileInput?.nativeElement;
-    if (fileInput.files && fileInput.files[0]) {
-       this.filePath = fileInput.files[0]};
+    
       const formData = new FormData();
       formData.append('file', this.filePath);
       formData.append('file_name', this.fileForm.get('file_name')?.value);
@@ -121,7 +161,7 @@ export class CreateFileComponent implements OnInit {
       formData.append('Category_id', this.fileForm.get('Category_id')?.value);
       formData.append('subCategories', this.fileForm.get('subCategories')?.value);
       formData.append('status_id',this.fileForm.get('status_id')?.value);
-      formData.append('file_desc','');
+      formData.append('file_desc',this.fileForm.get('file_desc')?.value);
       formData.append('userID', this.fileForm.get('createdByID')?.value);
       
       formData.forEach((value, key) => {
@@ -133,5 +173,42 @@ export class CreateFileComponent implements OnInit {
     },
     error=>{ this.toastr.error('Error In Creating File', 'Error');}
     )
+  }
+    // let subCategories = this.fileForm.get('subCategories')?.value;
+    // let objects = subCategories.map((item:any) => {return {"subcat_id":item}});
+    // this.fileForm.get('subCategories')?.setValue(JSON.stringify(objects))
+
+    // let year = this.fileForm.get('Year')!.value;
+    // let dateString = new Date(year).getFullYear();
+    // this.fileForm.get('Year')!.setValue(dateString);
+
+    // const fileInput = this.fileInput?.nativeElement;
+    // if (fileInput.files && fileInput.files[0]) {
+    //    this.filePath = fileInput.files[0]
+    //   };
+    //   const formData = new FormData();
+    //   formData.append('file', this.filePath);
+    //   formData.append('file_name', this.fileForm.get('file_name')?.value);
+    //   formData.append('Doc_No', this.fileForm.get('Doc_No')?.value);
+    //   formData.append('Year', this.fileForm.get('Year')?.value);
+    //   formData.append('txt_Ar', this.fileForm.get('txt_Ar')?.value);
+    //   formData.append('txt_Eng', this.fileForm.get('txt_Eng')?.value);
+    //   formData.append('Country_id', this.fileForm.get('Country_id')?.value);
+    //   formData.append('isAuthorized',this.fileForm.get('isAuthorized')?.value);
+    //   formData.append('Category_id', this.fileForm.get('Category_id')?.value);
+    //   formData.append('subCategories', this.fileForm.get('subCategories')?.value);
+    //   formData.append('status_id',this.fileForm.get('status_id')?.value);
+    //   formData.append('file_desc',this.fileForm.get('file_desc')?.value);
+    //   formData.append('userID', this.fileForm.get('createdByID')?.value);
+      
+    //   formData.forEach((value, key) => {
+    //     console.log(`${key}: ${value}`);
+    //   });
+    // this.fileService.createFile(formData).subscribe(result=>{
+    //   this.toastr.success('File Added Successfully!', 'Success');
+    //   this.router.navigate(['/home'])
+    // },
+    // error=>{ this.toastr.error('Error In Creating File', 'Error');}
+    // )
   }
 }

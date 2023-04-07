@@ -13,13 +13,19 @@ import { LoadingService } from 'src/app/services/loading.service';
 })
 export class ChangePasswordComponent implements OnInit {
 model:any={};
-
+userIdLocal:any;
+userApi:any
   constructor( private authService:AuthService,private loadingService:LoadingService,
 
     private toastr:ToastrService, private router:Router) { }
 
   ngOnInit(): void {
-
+this.userIdLocal = JSON.parse( localStorage.getItem('user')!).user_id
+this.authService.getUser(this.userIdLocal).subscribe(res=>{
+  this.userApi= res
+  this.model.email= this.userApi.email
+  console.log(this.model.email)
+})
   }
 async changePassword(){
   this.loadingService.show();
