@@ -4,14 +4,16 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserDetailsComponent } from '../component/user-details/user-details.component';
 import { User } from '../interfaces/user';
+import jwt_decode from 'jwt-decode';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-private currentUserSource = new BehaviorSubject(null);
+private currentUserSource = new BehaviorSubject<any>(null);
 currentUser$= this.currentUserSource.asObservable()
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private cookieService:CookieService) { }
 
   getAll(){
     return this.http.get('https://pharmaciax-api.onrender.com/users')
@@ -37,13 +39,20 @@ currentUser$= this.currentUserSource.asObservable()
   login(model:any){
     return this.http.post(`${environment.base_url}`+"user/login",model)
     .pipe(map((res:any)=>{
-      const user = res;
-      if(user){
-        localStorage.setItem("user",JSON.stringify(user));
-        console.log(localStorage.getItem("user"))
-        this.currentUserSource.next(user)
+      
+      if(res && res.token){
+        const user: User = jwt_decode(res.token);
+       
+        if(user){
+        
+          this.currentUserSource.next(user);
+          this.cookieService.set('user', JSON.stringify(user), 1, '/', '', true, 'Strict');
+         return user;
+        }
+        return null;
       }
-      return user
+      return null;
+      
     })
   )};
 
@@ -52,7 +61,7 @@ currentUser$= this.currentUserSource.asObservable()
   }
 
   logout(){
-    localStorage.removeItem("user");
+    this.cookieService.delete("user");
     this.currentUserSource.next(null)
   }
 

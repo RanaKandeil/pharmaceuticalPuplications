@@ -9,6 +9,7 @@ import { CategoryService } from 'src/app/services/category.service';
 import { FileService } from 'src/app/services/file.service';
 import Quill from 'quill'
 import BlotFormatter from 'quill-blot-formatter'
+import { CookieOptions, CookieService } from 'ngx-cookie-service';
 
 Quill.register('modules/blotFormatter', BlotFormatter)
 
@@ -41,25 +42,29 @@ export class UpdateFileComponent implements OnInit {
 
 
   constructor(private categoryService:CategoryService,
+    private cookieService:CookieService,
      private fileService:FileService, private fb:FormBuilder,
      private route:ActivatedRoute,private router:Router,
       private toastr:ToastrService,private sanitizer: DomSanitizer) { 
      
-        this.quillEditorModules = {
-         toolbar:[
-           [{'font':[]}],
-           ['bold','italic','underline'],
-           [{'list':'ordered'},{'list':'bullet'}],
-           [{'color':[]},{'background':[]}],
-           ['link','image']
-         ],
-         blotFormatter: {}
-       }
+      //   this.quillEditorModules = {
+      //    toolbar:[
+      //      [{'font':[]}],
+      //      ['bold','italic','underline'],
+      //      [{'list':'ordered'},{'list':'bullet'}],
+      //      [{'color':[]},{'background':[]}],
+      //      ['link','image']
+      //    ],
+      //    blotFormatter: {}
+      //  }
+      this.quillEditorModules = {
+        blotFormatter: {}
+      }
      }
 
   ngOnInit(): void {
  
-    const userlogged = JSON.parse(localStorage.getItem('user')!)
+    const userlogged = JSON.parse(this.cookieService.get('user')!)
     this.userId = userlogged.user_id
     this.fileForm = this.fb.group({
       File_data_id:[''],
@@ -68,7 +73,7 @@ export class UpdateFileComponent implements OnInit {
       Year: ['' ,Validators.required],
       txt_Ar:['',Validators.required],
       txt_Eng:['',Validators.required],
-      fileID:['',Validators.required],
+      fileID:[''],
       Country_id:['',Validators.required],
       Category_id:['',Validators.required],
       subCategories:[[],Validators.required],
@@ -94,7 +99,6 @@ export class UpdateFileComponent implements OnInit {
     
     this.fileService.getFile(this.fileId).subscribe(res=>{
       this.file = res;
-      console.log(this.file);
       this.pdfLoading = true;
       const filePathString = this.file?.data?.fileID;
    
@@ -102,8 +106,21 @@ export class UpdateFileComponent implements OnInit {
       this.fileService.getFileFromGoogle(url)
     .subscribe(blob => {
       const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+      const file =  new File([blob], '', { type:  'application/pdf'});
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        const fileList = dataTransfer.files;
+        this.fileInput.nativeElement.value = '';
+        this.fileInput.nativeElement.files = fileList;
+      
+      //   console.log(this.file.data)
+      
+    };
+      reader.readAsDataURL(file);
+      
       this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(pdfBlob));
-      console.log(this.pdfUrl)
       this.pdfLoading = false;
     });
       
@@ -122,11 +139,15 @@ export class UpdateFileComponent implements OnInit {
         Category_id:this.file.data?.Category.cat_id,
         status_id:this.file.data?.file_data_status.status_id,
         subCategories:subCategoryIds ,
-        file_desc:this.file.data?.file_desc,
-        isAuthorized:this.file.data?.isAuthorized,
-        isActive:this.file.data?.isactive
+        file_desc:this.file?.data?.file_desc,
+        isAuthorized:this.file?.data?.isAuthorized,
+        isActive:this.file?.data?.isactive,
+       
+        
       },{ emitEvent: true })
     })
+    console.log("DATAAAAAAAAAAAAAAAAAAAAAAaa")
+    console.log(this.file?.data)
 
     
   }
@@ -195,7 +216,7 @@ export class UpdateFileComponent implements OnInit {
       formData.append('Category_id', this.fileForm.get('Category_id')?.value);
       formData.append('subCategories', this.fileForm.get('subCategories')?.value);
       formData.append('status_id',this.fileForm.get('status_id')?.value);
-      formData.append('file_desc','');
+      formData.append('file_desc',this.fileForm.get('file_desc')?.value);
       formData.append('userID', this.fileForm.get('createdByID')?.value);
       console.log(formData)
       formData.forEach((value, key) => {

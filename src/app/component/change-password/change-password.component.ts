@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import * as CryptoJS from 'crypto-js';
 import { Router } from '@angular/router';
 import { LoadingService } from 'src/app/services/loading.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-change-password',
@@ -16,11 +17,11 @@ model:any={};
 userIdLocal:any;
 userApi:any
   constructor( private authService:AuthService,private loadingService:LoadingService,
-
+    private cookieService:CookieService,
     private toastr:ToastrService, private router:Router) { }
 
   ngOnInit(): void {
-this.userIdLocal = JSON.parse( localStorage.getItem('user')!).user_id
+this.userIdLocal = JSON.parse( this.cookieService.get('user')).user_id
 this.authService.getUser(this.userIdLocal).subscribe(res=>{
   this.userApi= res
   this.model.email= this.userApi.email

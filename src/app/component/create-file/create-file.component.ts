@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { QuillModule } from 'ngx-quill';
 import Quill from 'quill'
 import BlotFormatter from 'quill-blot-formatter'
+import { CookieService } from 'ngx-cookie-service';
 
 Quill.register('modules/blotFormatter', BlotFormatter)
 
@@ -30,7 +31,9 @@ export class CreateFileComponent implements OnInit {
   submitted = false;
   get f() { return this.fileForm.controls; }
 
-  constructor(private fb:FormBuilder,private fileService:FileService,
+  constructor(private fb:FormBuilder,
+     private cookieService: CookieService,
+     private fileService:FileService,
      private categoryService:CategoryService,private toastr: ToastrService,
      private router:Router) {
       // this.quillEditorModules = {
@@ -51,7 +54,7 @@ export class CreateFileComponent implements OnInit {
       
 
   ngOnInit(): void {
-    const userlogged = JSON.parse(localStorage.getItem('user')!)
+    const userlogged = JSON.parse(this.cookieService.get('user')!)
     this.userId = userlogged.user_id
     this.fileForm = this.fb.group({
       file_name:['',Validators.required],
@@ -87,6 +90,7 @@ export class CreateFileComponent implements OnInit {
 
   onImageChangeFromFile(event: any) {
     const file = event.target.files[0];
+    
     if (!file) {
       return;
     }
@@ -171,7 +175,7 @@ export class CreateFileComponent implements OnInit {
       this.toastr.success('File Added Successfully!', 'Success');
       this.router.navigate(['/home'])
     },
-    error=>{ this.toastr.error('Error In Creating File', 'Error');}
+    error=>{ (error?.error?.message) ? this.toastr.error(error?.error?.message, 'Error'):this.toastr.error('Something went wrong', 'Error') ;}
     )
   }
     // let subCategories = this.fileForm.get('subCategories')?.value;

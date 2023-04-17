@@ -10,6 +10,7 @@ import { CategoryService } from 'src/app/services/category.service';
 import { FileService } from 'src/app/services/file.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DatePipe } from '@angular/common';
+import { CookieOptions, CookieService } from 'ngx-cookie-service';
 
 
 
@@ -54,6 +55,7 @@ export class HomeComponent implements OnInit {
 
  
   constructor(private authService:AuthService,
+    private cookieService:CookieService,
     private router:Router, private loadingService:LoadingService,
     private googleService:SocialAuthService,private fileService:FileService,
     public categoryService:CategoryService,private http:HttpClient,private fb:FormBuilder) { 
@@ -72,7 +74,7 @@ export class HomeComponent implements OnInit {
       subcat_id:['']
     })
 
-     this.user = JSON.parse(localStorage.getItem("user")!)
+     this.user = JSON.parse(this.cookieService.get('user')!)
      
      const userRoleId = this.user.role_id
      this.categoryService.getRoleById(userRoleId).subscribe((res:any)=>{
@@ -159,7 +161,7 @@ export class HomeComponent implements OnInit {
 
   filterDataByCountry(countryId:any){
     this.user.Country_id = countryId;
-    localStorage.setItem("user",JSON.stringify(this.user));
+    this.cookieService.set('user', JSON.stringify(this.user), 1, '/', '', true, 'Strict');
     const searchObj:SearchFiltre={
          country_id: countryId,
          status_id:null,

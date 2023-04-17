@@ -40,12 +40,13 @@ imageUrl:any
 
   createUser(){
     const user = this.newUserForm.value
-    console.log(user)
+ 
     this.authService.createuser(user).subscribe(res=>{
       this.toastr.success('User Added Successfully!', 'Success');
       this.router.navigate(['/adminPage'])
     },
-    error=>{ this.toastr.error('Error In Creating User', 'Error');}
+    error=>{ (error?.error?.message) ? this.toastr.error(error?.error?.message, 'Error'):this.toastr.error('Something went wrong', 'Error') ;}
+   // error=>{ this.toastr.error('Error In Creating User', 'Error');}
 
     )
 

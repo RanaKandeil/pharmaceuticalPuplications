@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { FileService } from 'src/app/services/file.service';
 
 
@@ -17,6 +18,7 @@ page: number = 1;
 subObj:any = "";
 pdfLoading: boolean = true;
   constructor(private route:ActivatedRoute,
+    private cookieService:CookieService,
      private fileService:FileService,
      private router: Router,
      private sanitizer: DomSanitizer) {
@@ -35,7 +37,7 @@ pdfLoading: boolean = true;
     //   console.log(this.pdfUrl)
     // });
 
-    this.user = JSON.parse(localStorage.getItem("user")!)
+    this.user = JSON.parse(this.cookieService.get('user')!)
     const FileId = this.route.snapshot.paramMap.get('id')
     this.fileService.getFile(FileId).subscribe((res:any)=>{
       this.file = res

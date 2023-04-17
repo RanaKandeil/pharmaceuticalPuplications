@@ -48,16 +48,21 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.model).subscribe({
       
       next: (res:any) => {
+        
         this.loadingService.hide();
-        this.user = res;
-        this.messageService.add({
-          key: 'tc',
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Message Content',
-        });
-        if (this.user) {
-          this.router.navigate(['/home']);
+        if(res){
+          this.user = res;
+          if(this.user?.user_id != null){
+            this.router.navigate(['/home']);
+          }
+          
+        }else{
+          this.messageService.add({
+            key: 'tc',
+            severity: 'error',
+            summary: 'error',
+            detail: 'Something Went Wrong',
+          });
         }
       },
       error: (error:any) => {

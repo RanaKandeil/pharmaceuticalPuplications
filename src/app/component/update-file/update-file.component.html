@@ -43,7 +43,7 @@
               <form [formGroup]="fileForm" (ngSubmit)="update()">
                 <div class="row mb-4">
                   <div class="col-2 text-center">
-                     <label class="form-label" for="file_name">إسم المستند</label>
+                     <label class="form-label" for="file_name" style="font-size: large;">إسم المستند</label>
                   </div>
                   <div class="col-4">
                     <input
@@ -54,7 +54,7 @@
                   </div>
                 
                   <div class="col-2 text-center">
-                   <label class="form-label" for="Doc_No">رقم المستند</label>
+                   <label class="form-label" for="Doc_No" style="font-size: large;">رقم المستند</label>
                   </div>
                   <div class="col-4">
                     <input
@@ -64,24 +64,9 @@
                       type="text"/>
                   </div>
                 </div>
-                <div class="mb-5 text-center">
-                  <label class="form-label" for="Year">تاريخ الإصدار</label>
-                  <div class="p-fluid p-grid p-formgrid">
-                      <div class="p-field p-col-10">
-                          <p-calendar
-                          [required]="true"
-                          formControlName="Year"
-                            view="year"
-                            dateFormat="yy"
-                            [readonlyInput]="false"
-                            inputId="pickYear">
-                          </p-calendar>
-                      </div>
-                  </div>
-                </div>
-                <div class="row mb-5">
+                <div class="row mb-1">
                   <div class="col-2 text-center ">
-                      <label class="form-label" for="txt_Ar"> كلمات مفتاحية عربي</label>
+                      <label class="form-label" for="txt_Ar" style="font-size: large;"> كلمات مفتاحية عربي</label>
                   </div>
                   <div class="col-4">
                       <input
@@ -92,7 +77,7 @@
                   </div>
                 
                   <div class="col-2 text-center">
-                    <label class="form-label" for="txt_Eng">كلمات مفتاحية إنجليزي</label>
+                    <label class="form-label" for="txt_Eng" style="font-size: large;">كلمات مفتاحية إنجليزي</label>
                   </div>
                   <div class="col-4">
                     <input 
@@ -102,39 +87,49 @@
                     type="text" />
                   </div>
                 </div>
-                <!-- <div class="mb-3">
-                  <label class="form-label" for="fileID">إختيار الملف</label>
-                  <input #fileInput
-                   formControlName="fileID"
-                  class="form-control" 
-                  type="file" />
-                </div> -->
-                <div class="row mb-4">
+                <div class="row mb-3 text-center">
+                  <div style="width: 16.7%;">
+                    <label class="form-label" for="Year" style="font-size: large;">تاريخ الإصدار</label>
+                  </div>
+                  <div style="width: 83.3%;">
+                  <div class="p-fluid p-grid p-formgrid">
+                      <div class="p-field p-col-10">
+                          <p-calendar
+                          [required]="true"
+                          formControlName="Year"
+                            view="year"
+                            dateFormat="yy"
+                            [readonlyInput]="false"
+                            inputId="pickYear"
+                            >
+                          </p-calendar>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
                   <div class="col-2 text-center align-items-center">
-                   <label class="form-label" for="file_Path" style="margin-top: 100px;">إختيار الملف</label>
+                   <label class="form-label" for="file_Path" style="margin-top: 100px;font-size: large;">إختيار الملف</label>
                   </div>
                   <div class="col-4">
                     <input #fileInput 
                     style="margin-top: 100px;"
-                    [required]="true"  
+                     
                     (change)="onImageChangeFromFile($event)"
                     class="form-control" 
                     formControlName="fileID"
                     type="file" 
                     accept="application/pdf"/>
                     <div *ngIf="f['fileID'].touched && f['fileID'].errors" class=" alert alert-danger">
-                      <div *ngIf="f['fileID'].errors?.['required']">This Field Is Required And Only Pdf File Allowed</div>
+                      <!-- <div *ngIf="f['fileID'].errors?.['required']">This Field Is Required And Only Pdf File Allowed</div> -->
                       <div *ngIf="f['fileID'].errors?.['max']">File size must be less than 10MB.</div>
                     </div>
                   </div>
-                  <!-- <div class=" col-6 card-body bg-light">
-                    <iframe [src]="pdfUrl" width="100%" height="200"></iframe>
-                  </div> -->
                   <div class="col-6 card-body bg-light">
                     <ng-container *ngIf="pdfLoading; else pdfContent">
                       <div class="text-center">
                         <i class="fa fa-spinner fa-spin fa-4x"></i>
-                        <p>Loading PDF...</p>
+                        <p>جاري التحميل ...</p>
                       </div>
                     </ng-container>
                     <ng-template #pdfContent>
@@ -143,21 +138,22 @@
                   </div>
                   
                 </div>
-                <div class="row mb-5">
+                <div class="row mb-4">
                   <div class="col-2 text-center">
-                    <label class="form-label" for="file_desc" style="margin-top: 125px;"> وصف المستند</label>
+                    <label class="form-label" for="file_desc" style="margin-top: 125px;font-size: large;"> وصف المستند</label>
                   </div>
                   <div class="col-10">
                     <quill-editor
+                    [required]="true"
                       [styles]="{height: '250px', backgroundColor:'#faf8f8'}"
                       formControlName="file_desc"
                       [modules]="quillEditorModules">
                     </quill-editor>
                   </div>
                 </div>
-                <div class="mb-5 row">
+                <div class="mb-4 row">
                   <div class="col-2 text-center">
-                    <label class="form-label" for="status_id">حالة المستند</label> 
+                    <label class="form-label" for="status_id" style="font-size: large;">حالة المستند</label> 
                   </div>
                   <div class="col-4">
                       <ng-select
@@ -170,7 +166,7 @@
                       </ng-select>
                   </div>
                   <div class="col-2 text-center">
-                   <label class="form-label" for="Country_id"> الدولة</label>
+                   <label class="form-label" for="Country_id" style="font-size: large;"> الدولة</label>
                   </div>
                   <div class="col-4">
                       <ng-select
@@ -184,9 +180,9 @@
                   </div>
                 </div>
 
-                <div class="mb-5 row">
+                <div class="mb-4 row">
                   <div class="col-2 text-center">
-                      <label class="form-label" for="Category_id">التصنيف الرئيسي</label>
+                      <label class="form-label" for="Category_id" style="font-size: large;">التصنيف الرئيسي</label>
                   </div>
                   <div class="col-4">
                       <ng-select [(ngModel)]="selectedCategory"
@@ -199,7 +195,7 @@
                       </ng-select>
                   </div>
                   <div class="col-2 text-center">
-                    <label class="form-label ngSelect" for="subCategories"> التصنيف الفرعي</label>
+                    <label class="form-label ngSelect" for="subCategories" style="font-size: large;"> التصنيف الفرعي</label>
                   </div>
                   <div class="col-4">
                       <ng-select  class="form-control ngSelect" 
@@ -213,17 +209,18 @@
                 </div>
                 <div class="row mb-3">
                   <div class="col-6 text-center">
-                    <label class="form-label" for="isAuthorized"> Authorized file</label>
+                    <label class="form-label" for="isAuthorized" style="font-size: large;"> Authorized file</label>
                     <br>
                     <input  formControlName="isAuthorized" type="checkbox"/>
                   </div>
                   <div class="col-6 text-center">
-                    <label class="form-label"> Active</label>
+                    <label class="form-label" style="font-size: large;"> Active</label>
                     <br>
                     <input formControlName="isActive" type="checkbox">
                   </div>
                   </div>
                 <div class="d-flex justify-content-between">
+
                   <button class="btn btn-primary" [disabled]="!fileForm.valid" type="submit">حفظ</button>
                   <button class="btn btn-danger ms-4" type="button" (click)="cancel()" >إلغاء</button>
                 </div>

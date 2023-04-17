@@ -16,7 +16,7 @@
           <div class="navbar-vertical-content scrollbar">
             <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
               <li class="nav-item">
-                <a *ngIf="showActiveFilesTable" (click)="filterByActiveFile()" class="nav-link"
+                <a *ngIf="showActiveFilesTable" (click)="filterByActiveFile();clearAll()" class="nav-link"
                 [ngClass]="{'active': activeFileFilter }" role="button">
                   <div class="d-flex align-items-center">
                     <span class="nav-link-icon">
@@ -27,7 +27,7 @@
                 </a>
               </li>
               <li class="nav-item" *ngFor="let category of categories; let i = index" value="{{i}}">
-                <a *ngIf="showActiveFilesTable" (click)="filterDataByCat(category,i)" class="nav-link dropdown-indicator"
+                <a *ngIf="showActiveFilesTable" (click)="filterDataByCat(category,i); clearAll()" class="nav-link dropdown-indicator"
                   [ngClass]="{'active': selectedCategoryIndex === i && !activeFileFilter }"
                   href='#dash{{i}}'  role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dashboard">
                     <div class="d-flex align-items-center">
@@ -42,7 +42,7 @@
                     <a *ngIf="showActiveFilesTable" class="nav-link " role="button"
                      [ngClass]="{'active': selectedSubcategoryIndex === subcategory.subcat_id && !activeFileFilter}" >
                       <div class="d-flex align-items-center">
-                        <span (click)="filterDataBySub(category,subcategory)" class="nav-link-text ps-1">{{subcategory.SubCategory_name}}</span>
+                        <span (click)="filterDataBySub(category,subcategory); clearAll()" class="nav-link-text ps-1">{{subcategory.SubCategory_name}}</span>
                       </div>
                     </a>
                   </li>
@@ -77,9 +77,22 @@
                  <span class="p-1 bi-plus-circle-fill mt-auto"></span>إضافة ملف جديد
               </button></a>
             </li>
+            <li class="nav-item pt-2">
+              <a class="nav-link pe-3" >
+                <button disabled class="btn me-1 mb-1 rounded-pill btn-sm"
+                [ngClass]="{
+                  'btn-danger': roles?.role_name === 'Admin',
+                  'btn-warning': roles?.role_name === 'Editor',
+                  'btn-success': roles?.role_name === 'Authorized',
+                  'btn-primary': roles?.role_name === 'User'
+                }">
+                  {{roles?.role_name}}
+                </button>
+              </a>
+            </li>
             <li *ngIf="user.role_id == 1 || user.role_id == 2||user.role_id == 3" class="nav-item dropdown pt-2 pe-2">
               <a class="nav-link" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                <span style="font-weight:bolder ;font-size: 16px;">الدولة</span>
+                <span style="font-weight:bolder ;font-size: 16px;">تغيير الدولة</span>
               </a>
               <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownNotification">
                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
@@ -94,22 +107,9 @@
                 </div>
               </div>
             </li>
-            <li class="nav-item pt-2">
-              <a class="nav-link pe-3" >
-                <button disabled class="btn me-1 mb-1 rounded-pill btn-sm"
-                [ngClass]="{
-                  'btn-danger': roles?.role_name === 'Admin',
-                  'btn-warning': roles?.role_name === 'Editor',
-                  'btn-success': roles?.role_name === 'Authorized',
-                  'btn-primary': roles?.role_name === 'User'
-                }">
-                  {{roles?.role_name}}
-                </button>
-              </a>
-            </li>
             <li class="nav-item pt-1">
               <a  class="nav-link pe-3" role="button"  aria-haspopup="true" aria-expanded="false" >
-                <img style="width: 20px;height: 10px;justify-self:self-end;" [src]="getCountryFlag(user.Country_id)">
+                <img style="width: 30px;height: 20px;justify-self:self-end;" [src]="getCountryFlag(user.Country_id)">
               </a>
             </li>
             <li class="nav-item dropdown pt-1">
@@ -188,15 +188,15 @@
                   <table class="table table-bordered table-striped fs--1 mb-0">
                     <thead class="bg-200 text-900">
                       <tr>
-                        <th class="sort" data-sort="file_name">إسم المستند </th>
-                        <th class="sort" data-sort="Doc_No"> رقم المستند</th>
-                        <th class="sort" data-sort="Year">سنة الإصدار </th>
-                        <th class="sort" data-sort="isAuthorized"> is Authorizrd </th>
-                        <th class="sort" data-sort="Country"> الدولة </th>
-                        <th class="sort" data-sort="Category"> التصنيف الرئيسي  </th>
-                        <th class="sort" data-sort="file_data_status">الحالة</th>
-                        <th class="sort" data-sort="file_name">تاريخ أخر تحديث</th>
-                        <th> عرض القرار </th>
+                        <th class="sort text-center" data-sort="file_name" style="font-size: large;">إسم المستند </th>
+                        <th class="sort text-center" data-sort="Doc_No" style="font-size: large;"> رقم المستند</th>
+                        <th class="sort text-center" data-sort="Year" style="font-size: large;">سنة الإصدار </th>
+                        <th class="sort text-center" data-sort="isAuthorized" style="font-size: large;"> is Authorizrd </th>
+                        <th class="sort text-center" data-sort="Country" style="font-size: large;"> الدولة </th>
+                        <th class="sort text-center" data-sort="Category" style="font-size: large;"> التصنيف الرئيسي  </th>
+                        <th class="sort text-center" data-sort="file_data_status" style="font-size: large;">الحالة</th>
+                        <th class="sort text-center" data-sort="file_name" style="font-size: large;">تاريخ أخر تحديث</th>
+                        <th class="text-center" style="font-size: large;"> عرض القرار </th>
                       </tr>
                     </thead>
                     <tbody class="list">

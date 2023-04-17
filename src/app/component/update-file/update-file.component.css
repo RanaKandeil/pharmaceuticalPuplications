@@ -9,3 +9,7 @@
     top: 50%;
     width: 0;
 }
+
+:host ::ng-deep .p-datepicker-prev-icon.pi.pi-chevron-left ::before{
+    transform: rotate(180deg); /* Rotate the arrow 90 degrees clockwise */
+  }

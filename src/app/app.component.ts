@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -10,16 +11,17 @@ import { AuthService } from './services/auth.service';
 export class AppComponent implements OnInit{
   title = 'pharmaceuticalPuplications';
 
-  constructor(private authService:AuthService,private router:Router){
+  constructor(private authService:AuthService,
+    private cookieService:CookieService,
+    private router:Router){
 
   }
   ngOnInit(): void {
     this.setCurrentUser()
-    const user = localStorage.getItem('user')
-   // console.log(user)
+
   }
   setCurrentUser(){
-    const userString = localStorage.getItem("user")
+    const userString = this.cookieService.get('user');
     if(!userString) return
         
       const user = JSON.parse(userString)
