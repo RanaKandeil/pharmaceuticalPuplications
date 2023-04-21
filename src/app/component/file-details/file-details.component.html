@@ -1,158 +1,229 @@
 <main class="main" id="top">
-    <div class="container">
-        <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand ">
-            <div class="d-flex align-items-center">
-              <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
-              <a class="navbar-brand me-1 me-sm-3" routerLink="/home">
-                <button class="d-flex align-items-center p-3 btn btn-outline-secondary btn-sm">العودة إلي الصفحة الرئيسية</button>
-              </a>
-            </div>
-            <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center"> 
-              <li *ngIf="file?.data?.createdBy.id == user.user_id || user.role_id === 1"
-                  class="nav-item pt-2">
-                <a class="nav-link pe-3" >
-                  <button [routerLink]="['/update_file',file?.data?.File_data_id]"  class="btn btn-primary me-1 mb-1">تعديل
-                  </button>
-                </a>
-              </li>
-              <li *ngIf="user.role_id === 1"
-              class="nav-item pt-2">
-                <a class="nav-link pe-3" >
-                  <button (click)="delete(file?.data?.File_data_id)" class="btn btn-danger me-1 mb-1">حذف
-                  </button>
-                </a>
-              </li>
-            </ul>
-        </nav>
-        <div class="content">
-        <div class="card mb-3">
-            <div class="card-header">
-                  <div class="col">
-                    <h5 class="mb-0">كود المستند</h5>
-                  </div>
-            </div>
-            <div class="card-body bg-light border-top">
-              <div class="d-flex">
-                <div class="flex-1">
-                  <p class=" mb-0 mt-3 " style="color: red;text-align: center;">{{file?.data?.File_data_id}}</p>
-                </div>
-              </div>
-            </div>
+  <div class="container">
+    <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand">
+      <div class="d-flex align-items-center">
+        <button
+          class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarVerticalCollapse"
+          aria-controls="navbarVerticalCollapse"
+          aria-expanded="false"
+          aria-label="Toggle Navigation"
+        >
+          <span class="navbar-toggle-icon"
+            ><span class="toggle-line"></span
+          ></span>
+        </button>
+        <a class="navbar-brand me-1 me-sm-3" routerLink="/home">
+          <button
+            class="d-flex align-items-center p-3 btn btn-outline-secondary btn-sm"
+          >
+            العودة إلي الصفحة الرئيسية
+          </button>
+        </a>
+      </div>
+      <ul
+        class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center"
+      >
+        <li
+          *ngIf="file?.data?.createdBy.id == user.user_id || user.role_id === 1"
+          class="nav-item pt-2"
+        >
+          <a class="nav-link pe-3">
+            <button
+              [routerLink]="['/update_file', file?.data?.File_data_id]"
+              class="btn btn-primary me-1 mb-1"
+            >
+              تعديل
+            </button>
+          </a>
+        </li>
+        <li *ngIf="user.role_id === 1" class="nav-item pt-2">
+          <a class="nav-link pe-3">
+            <button
+              (click)="delete(file?.data?.File_data_id)"
+              class="btn btn-danger me-1 mb-1"
+            >
+              حذف
+            </button>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="content">
+      <div class="card mb-3">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="mb-0">كود المستند</h5>
+          </div>
         </div>
-        <div class="card mb-3">
-            <div class="card-header">
-              <div class="row justify-content-between">
-                <div class="col-9">
-                  <h5 class="mb-0">تفاصيل المستند</h5>
-                </div>
-                <div class="col-3">
-                    <ng-container *ngIf="file?.data?.isactive === 1; else inactive" >
-                    <span style="color:#2c7be5;font-size: large; font-weight: bold;">Active</span>
-                    </ng-container>
-                    <ng-template #inactive >
-                      <span style="color: red;font-weight: bold;font-size: large;">Inactive</span> 
-                    </ng-template>
-                </div>
-              </div>
-            </div>
-            <div class="card-body bg-light border-top">
-                <div class="row navbar-glass"  >
-                    <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1" >إسم المستند</p>
-                    </div>
-                    <div style="font-weight: bold;font-size: large;margin: auto;" class="col-8">{{file?.data?.file_name}}</div>
-                  </div>
-              <div class="row">
-                <div class="col-lg col-xxl-5">
-                  <div class="row">
-                    <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1">التصنيف الرئيسي</p>
-                    </div>
-                    <div style="font-weight:bold ;" class="col-5">{{file?.data?.Category.Category_name}}</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1">رقم الإصدار</p>
-                    </div>
-                    <div style="font-weight: bold;" class="col-5">{{file?.data?.Doc_No}}</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1">الدولة</p>
-                    </div>
-                    <div style="font-weight: bold;" class="col-5">{{file?.data?.Country?.country_name}}</div>
-                  </div>
-                </div>
-                <div class="col-lg col-xxl-5 mt-4 mt-lg-0 offset-xxl-1">
-                  <div class="row">
-                    <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1">تصنيف فرعي</p>
-                    </div>
-                    <div style="font-weight: bold;" class="col-5">{{subObj}}</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1">سنة الإصدار</p>
-                    </div>
-                    <div style="font-weight: bold;" class="col-5">{{file?.data?.Year}}</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-3 col-sm-4 mb-3 ">
-                      <p class="fw-semi-bold mb-1">حالة المستند</p>
-                    </div>
-                    <div style="background-color:#4CAF50; color: black;text-align: center;margin: auto;"  
-                    class="col-5">{{file?.data?.file_data_status?.status_name}}</div>
-                  </div>
-                </div>
-              </div>
+        <div class="card-body bg-light border-top">
+          <div class="d-flex">
+            <div class="flex-1">
+              <p class="mb-0 mt-3" style="color: red; text-align: center">
+                {{ file?.data?.File_data_id }}
+              </p>
             </div>
           </div>
-          <div class="card mb-3">
-            <div class="card-header">
-                <div class="row align-items-center">
-                  <div class="col">
-                    <h5 class="mb-0">وصف المستند</h5>
-                  </div>
-                </div>
-              </div>
-            <div  class="card-body bg-light border-top">
-              <div [innerHTML]="file?.data?.file_desc"></div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-header">
+          <div class="row justify-content-between">
+            <div class="col-9">
+              <h5 class="mb-0">تفاصيل المستند</h5>
             </div>
-          </div>
-          <div class="card mb-3">
-            <div class="card-header">
-                <div class="row align-items-center">
-                  <div class="col">
-                    <h5 class="mb-0">صورة المستند</h5>
-                  </div>
-                </div>
-              </div>
-            <!-- <div class="card-body bg-light border-top">
-              <iframe [src]="pdfUrl" width="100%" height="600"></iframe>
-            </div> -->
-            <div class=" card-body bg-light">
-              <ng-container *ngIf="pdfLoading; else pdfContent">
-                <div class="text-center">
-                  <i class="fa fa-spinner fa-spin fa-4x"></i>
-                  <p>جاري التحميل...</p>
-                </div>
+            <div class="col-3">
+              <ng-container *ngIf="file?.data?.isactive === 1; else inactive">
+                <span
+                  style="color: #2c7be5; font-size: large; font-weight: bold"
+                  >Active</span
+                >
               </ng-container>
-              <ng-template #pdfContent>
-                <iframe [src]="pdfUrl" width="100%" height="600"></iframe>
+              <ng-template #inactive>
+                <span style="color: red; font-weight: bold; font-size: large"
+                  >Inactive</span
+                >
               </ng-template>
             </div>
-            
           </div>
         </div>
-          <footer class="footer">
-            <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
-              <div class="col-12 col-sm-auto text-center">
-                <p class="mb-0 text-600">Thank you for creating with Falcon <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none"> 2022 © <a href="https://themewagon.com">Themewagon</a></p>
+        <div class="card-body bg-light border-top">
+          <div class="row navbar-glass">
+            <div class="col-3 col-sm-4 mb-3">
+              <p class="fw-semi-bold mb-1">إسم المستند</p>
+            </div>
+            <div
+              style="font-weight: bold; font-size: large; margin: auto"
+              class="col-8"
+            >
+              {{ file?.data?.file_name }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg col-xxl-5">
+              <div class="row">
+                <div class="col-3 col-sm-4 mb-3">
+                  <p class="fw-semi-bold mb-1">التصنيف الرئيسي</p>
+                </div>
+                <div style="font-weight: bold" class="col-5">
+                  {{ file?.data?.Category.Category_name }}
+                </div>
               </div>
-              <div class="col-12 col-sm-auto text-center">
-                <p class="mb-0 text-600">v3.14.0</p>
+              <div class="row">
+                <div class="col-3 col-sm-4 mb-3">
+                  <p class="fw-semi-bold mb-1">رقم الإصدار</p>
+                </div>
+                <div style="font-weight: bold" class="col-5">
+                  {{ file?.data?.Doc_No }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-3 col-sm-4 mb-3">
+                  <p class="fw-semi-bold mb-1">الدولة</p>
+                </div>
+                <div style="font-weight: bold" class="col-5">
+                  {{ file?.data?.Country?.country_name + " " }}
+                  <img
+                    style="width: 60px; height: 30px"
+                    [src]="file?.data?.Country?.flag"
+                  />
+                </div>
               </div>
             </div>
-          </footer>
+            <div class="col-lg col-xxl-5 mt-4 mt-lg-0 offset-xxl-1">
+              <div class="row">
+                <div class="col-3 col-sm-4 mb-3">
+                  <p class="fw-semi-bold mb-1">تصنيف فرعي</p>
+                </div>
+                <div style="font-weight: bold" class="col-5">{{ subObj }}</div>
+              </div>
+              <div class="row">
+                <div class="col-3 col-sm-4 mb-3">
+                  <p class="fw-semi-bold mb-1">سنة الإصدار</p>
+                </div>
+                <div style="font-weight: bold" class="col-5">
+                  {{ file?.data?.Year }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-3 col-sm-4 mb-3">
+                  <p class="fw-semi-bold mb-1">حالة المستند</p>
+                </div>
+                <div class="col-6">
+                  <button
+                    disabled
+                    class="btn me-1 mb-1 rounded-pill btn-sm col-12"
+                    [ngClass]="{
+                      'btn-danger':
+                        file?.data?.file_data_status?.status_name === 'ملغي',
+                      'btn-warning':
+                        file?.data?.file_data_status?.status_name === 'معدل',
+                      'btn-success':
+                        file?.data?.file_data_status?.status_name === 'ساري'
+                    }"
+                  >
+                    {{ file?.data?.file_data_status?.status_name }}
+                  </button>
+
+                  <!-- {{ file?.data?.file_data_status?.status_name }} -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <h5 class="mb-0">وصف المستند</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body bg-light border-top">
+          <div [innerHTML]="file?.data?.file_desc"></div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <h5 class="mb-0">صورة المستند</h5>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="card-body bg-light border-top">
+              <iframe [src]="pdfUrl" width="100%" height="600"></iframe>
+            </div> -->
+        <div class="card-body bg-light">
+          <ng-container *ngIf="pdfLoading; else pdfContent">
+            <div class="text-center">
+              <i class="fa fa-spinner fa-spin fa-4x"></i>
+              <p>جاري التحميل...</p>
+            </div>
+          </ng-container>
+          <ng-template #pdfContent>
+            <iframe [src]="pdfUrl" width="100%" height="600"></iframe>
+          </ng-template>
+        </div>
+      </div>
     </div>
+    <footer class="footer">
+      <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
+        <div class="col-12 col-sm-auto text-center">
+          <p class="mb-0 text-600">
+            Thank you for creating with Falcon
+            <span class="d-none d-sm-inline-block">| </span
+            ><br class="d-sm-none" />
+            2022 © <a href="https://themewagon.com">Themewagon</a>
+          </p>
+        </div>
+        <div class="col-12 col-sm-auto text-center">
+          <p class="mb-0 text-600">v3.14.0</p>
+        </div>
+      </div>
+    </footer>
+  </div>
 </main>
