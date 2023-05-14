@@ -40,11 +40,14 @@
       <div class="card-body bg-light px-1 py-0">
         <div class="row g-0 text-center fs--1">
           <div *ngFor="let user of users" class="col-6 col-md-4 col-lg-3 col-xxl-2 mb-1">
-            <div class="bg-white dark__bg-1100 p-3 h-100"><a [routerLink]="['/user_details',user.id]"><img class="img-thumbnail img-fluid rounded-circle mb-3 shadow-sm"
-               [src]="imageUrl || 'https://png.pngtree.com/png-clipart/20210915/ourmid/pngtree-user-avatar-placeholder-png-image_3918418.jpg'" width="100"></a>
-              <h6 class="mb-1"><a href="../../pages/user/profile.html">{{user.first_name}} {{user.last_name}}</a>
+            <div class="bg-white dark__bg-1100 p-3 h-100"><a [routerLink]="['/user_details',user.id]">
+              <img 
+              [ngStyle]="{ 'background-color': user.role_id === 1 ? '#e63757' : user.role_id === 2 ? '#f5803e' : user.role_id === 3 ? 'green' : user.role_id === 4 ? '#2c7be5' : '' }"
+              class="img-thumbnail img-fluid rounded-circle mb-3 shadow-sm"
+               [src]="imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png'" width="100"></a>
+              <h6 class="mb-1"><a [routerLink]="['/user_details',user.id]">{{user.first_name}} {{user.last_name}}</a>
               </h6>
-              <p class="fs--2 mb-1"><a class="text-700" href="#!">{{user.email}}</a></p>
+              <p class="fs--2 mb-1"><a [routerLink]="['/user_details',user.id]" class="text-700">{{user.email}}</a></p>
             </div>
           </div>
         </div>

@@ -1,10 +1,10 @@
-<main class="main" id="top">
+
     <div class="container">
-        <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand ">
+        <nav [ngClass]="isModalOpen ? '' : 'navbar-top'" class="navbar navbar-light navbar-glass  navbar-expand ">
             <div class="d-flex align-items-center">
               <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
-              <a class="navbar-brand me-1 me-sm-3" routerLink="/home">
-                <button class="d-flex align-items-center p-3 btn btn-outline-secondary btn-sm">العودة إلي الصفحة الرئيسية</button>
+              <a class="navbar-brand  me-1 me-sm-3" routerLink="/home">
+                <button class="d-flex align-items-center p-3 btn btn-secondary btn-sm">العودة إلي الصفحة الرئيسية</button>
               </a>
             </div>
             <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center"> 
@@ -18,12 +18,35 @@
               <li *ngIf="user.role_id === 1"
               class="nav-item pt-2">
                 <a class="nav-link pe-3" >
-                  <button (click)="delete(file?.data?.File_data_id)" class="btn btn-danger me-1 mb-1">حذف
+                  <button type="button" class="btn btn-danger me-1 mb-1" (click)="isModalOpen = true"  data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    حذف 
                   </button>
+                  
+                  <!-- Modal -->
+                  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <!-- <div class="modal-header">
+                           <h1 class="modal-title fs-5" id="exampleModalLabel">رسالة تأكيد</h1> 
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div> -->
+                        <div class="modal-body" style="font-weight: bold;font-size: 20px;">
+                          هل تريد حذف المستند؟
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" (click)=" isModalOpen = false" class="btn btn-secondary" data-bs-dismiss="modal">لا</button>
+                          <button type="button" (click)="delete(file?.data?.File_data_id);isModalOpen=true" data-bs-dismiss="modal" class="btn btn-primary">نعم </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
                 </a>
               </li>
             </ul>
         </nav>
+
+
         <div class="content">
         <div class="card mb-3">
             <div class="card-header">
@@ -58,50 +81,57 @@
             <div class="card-body bg-light border-top">
                 <div class="row navbar-glass"  >
                     <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1" >إسم المستند</p>
+                      <p class=" mb-1"  >إسم المستند</p>
                     </div>
-                    <div style="font-weight: bold;font-size: large;margin: auto;" class="col-8">{{file?.data?.file_name}}</div>
-                  </div>
+                    <div style="font-weight: bold;font-size: large;" class="col-8">{{file?.data?.file_name}}</div>
+                </div>
               <div class="row">
                 <div class="col-lg col-xxl-5">
                   <div class="row">
                     <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1">التصنيف الرئيسي</p>
+                      <p class=" mb-1">التصنيف الرئيسي</p>
                     </div>
                     <div style="font-weight:bold ;" class="col-5">{{file?.data?.Category.Category_name}}</div>
                   </div>
                   <div class="row">
                     <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1">رقم الإصدار</p>
+                      <p class=" mb-1">رقم الإصدار</p>
                     </div>
                     <div style="font-weight: bold;" class="col-5">{{file?.data?.Doc_No}}</div>
                   </div>
                   <div class="row">
                     <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1">الدولة</p>
+                      <p class=" mb-1">الدولة</p>
+                    </div>
+                    <div class="col-1">
+                      <img style="height: 15px;width: 25px;" [src]="file?.data?.Country?.flag">
                     </div>
                     <div style="font-weight: bold;" class="col-5">{{file?.data?.Country?.country_name}}</div>
                   </div>
                 </div>
-                <div class="col-lg col-xxl-5 mt-4 mt-lg-0 offset-xxl-1">
+                <div class="col-lg col-xxl-5 mt-4 mt-lg-0">
                   <div class="row">
                     <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1">تصنيف فرعي</p>
+                      <p class=" mb-1">التصنيف الفرعي</p>
                     </div>
                     <div style="font-weight: bold;" class="col-5">{{subObj}}</div>
                   </div>
                   <div class="row">
                     <div class="col-3 col-sm-4 mb-3">
-                      <p class="fw-semi-bold mb-1">سنة الإصدار</p>
+                      <p class=" mb-1">سنة الإصدار</p>
                     </div>
                     <div style="font-weight: bold;" class="col-5">{{file?.data?.Year}}</div>
                   </div>
                   <div class="row">
                     <div class="col-3 col-sm-4 mb-3 ">
-                      <p class="fw-semi-bold mb-1">حالة المستند</p>
+                      <p class=" mb-1">حالة المستند</p>
                     </div>
-                    <div style="background-color:#4CAF50; color: black;text-align: center;margin: auto;"  
-                    class="col-5">{{file?.data?.file_data_status?.status_name}}</div>
+                    <div class="col-md-5"> 
+                      <button disabled class="btn me-1 mb-1 rounded-pill btn-sm"
+                      [ngStyle]="{'background-color': file?.data?.file_data_status.status_id === 1 ? ' green' : file?.data?.file_data_status.status_id === 2 ? 'orange' : 'red'}" style="font-weight: bolder;color: white;">
+                        {{file?.data?.file_data_status?.status_name}}
+                      </button>  
+                    </div>
                   </div>
                 </div>
               </div>
@@ -138,10 +168,57 @@
                 </div>
               </ng-container>
               <ng-template #pdfContent>
-                <iframe [src]="pdfUrl" width="100%" height="600"></iframe>
+                <!-- <ngx-extended-pdf-viewer
+                  *ngIf="pdfUrl"
+                  [src]="pdfUrl"
+                  [useBrowserLocale]="true"
+                  [height]="'100vh'"
+                  mobileZoom="1.5"
+                  (afterLoadComplete)="onPdfLoadComplete($event)"
+                  >
+                </ngx-extended-pdf-viewer> -->
+                <iframe *ngIf="pdfUrl && !pdfLoading" [src]="pdfUrl" [height]="'600vh'"
+                style="width: 100%; border: none;"></iframe>
               </ng-template>
             </div>
             
+          </div>
+          <div class="card mb-3">
+            <!-- <div class="card-header">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h5 class="mb-0">وصف المستند</h5>
+                  </div>
+                </div>
+              </div> -->
+            <div  class="card-body bg-light border-top">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-3 mb-3">
+                      <p class=" mb-1"> Created By :</p>
+                    </div>
+                    <div class="col-md-5" style="font-weight: bold;">{{file?.data?.createdBy?.first_name}} {{file?.data?.createdBy?.last_name}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3 mb-3"> Created At :</div>
+                    <div class="col-md-5" style="font-weight: bold;">{{datePipe.transform(file?.data?.createdAt, 'dd/MM/yyyy')}}</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-3 mb-3">
+                      <p class=" mb-1"> Updated By :</p>
+                    </div>
+                    <div class="col-md-5" style="font-weight: bold;">{{file?.data?.updatedBy?.first_name}} {{file?.data?.updatedBy?.last_name}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3 mb-3"> Updated At :</div>
+                    <div class="col-md-5" style="font-weight: bold;">{{datePipe.transform(file?.data?.updatedAt, 'dd/MM/yyyy')}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
           <footer class="footer">
@@ -155,4 +232,3 @@
             </div>
           </footer>
     </div>
-</main>

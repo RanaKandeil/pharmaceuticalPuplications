@@ -41,6 +41,8 @@ currentUser$= this.currentUserSource.asObservable()
     .pipe(map((res:any)=>{
       
       if(res && res.token){
+        const tokenJwt = res.token
+        this.cookieService.set('tokenJwt',JSON.stringify(tokenJwt),1,'/','',true, 'Strict');
         const user: User = jwt_decode(res.token);
        
         if(user){
@@ -61,6 +63,7 @@ currentUser$= this.currentUserSource.asObservable()
   }
 
   logout(){
+    this.cookieService.delete('tokenJwt');
     this.cookieService.delete("user");
     this.currentUserSource.next(null)
   }

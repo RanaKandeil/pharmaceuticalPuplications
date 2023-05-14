@@ -18,7 +18,7 @@
               <li class="nav-item">
                 <a *ngIf="showActiveFilesTable" (click)="filterByActiveFile();clearAll()" class="nav-link"
                 [ngClass]="{'active': activeFileFilter }" role="button">
-                  <div class="d-flex align-items-center">
+                  <div class="d-flex align-items-center" style="margin-top:60px;">
                     <span class="nav-link-icon">
                       <span class="fas fa-chart-pie"></span>
                     </span>
@@ -129,55 +129,63 @@
             </li>
           </ul>
         </nav>
-        <div class="card mb-3" *ngIf="showActiveFilesTable">
-          <div class="card-header d-flex justify-content-between">
-                <h5 class="mb-0" >بحث متقدم</h5>
-                <button class="btn btn-secondary rounded-pill btn-sm" (click)="clearAll()">Clear</button>
-          </div>
-          <div class="card-body bg-light">
-                <form class="row g-3" [formGroup]="searchForm" (ngSubmit)="filterBySearchForm()">
-                  <div class="col-md-3">
-                    <input class="form-control" 
-                     placeholder=" إسم المستند" formControlName="File_name" />
-                  </div>
-                  <div class="col-md-3">
-                     <input class="form-control"
-                     placeholder=" تاريخ المستند" formControlName="Year"/>
-                  </div>
-                  <div class="col-3">
+        
+          <div class="card mb-3" *ngIf="showActiveFilesTable">
+            <div class="card-header d-flex" >
+              <div class="toggle-icon-wrapper" (click)="toggleCard()">
+                <button class="btn navbar-toggler-humburger-icon navbar-vertical-toggle" data-bs-toggle="tooltip" data-bs-placement="left" aria-label="Toggle Navigation" data-bs-original-title="Toggle Navigation">
+                  <span class="navbar-toggle-icon">
+                    <span class="toggle-line"></span>
+                  </span>
+                </button>
+              </div>
+              <h5 class="mb-0 ps-2 mt-1" >بحث متقدم</h5>
+            </div>
+            <div class="card-body bg-light" *ngIf="searchBox">
+                  <form class="row g-3" [formGroup]="searchForm">
+                    <div class="col-md-3">
+                      <input class="form-control" 
+                       placeholder=" إسم المستند" formControlName="File_name" />
+                    </div>
+                    <div class="col-md-3">
+                       <input class="form-control"
+                       placeholder=" تاريخ المستند" formControlName="Year"/>
+                    </div>
+                    <div class="col-md-3">
+                        <input class="form-control"
+                        placeholder=" رقم المستند " formControlName="Doc_no"/>
+                    </div>
+                    <div class="col-md-3">
                       <input class="form-control"
-                      placeholder=" رقم المستند " formControlName="Doc_no"/>
-                  </div>
-                  <div class="col-3">
-                    <input class="form-control"
-                    placeholder="كلمات مفتاحية" formControlName="Txt"/>
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label" for="Status_id"> حالة المستند</label>
-                    <ng-select class="form-select ngSelect" formControlName="Status_id" >
-                      <ng-option *ngFor="let status of allStatus" [value]="status.status_id">{{status.status_name}}</ng-option>
-                    </ng-select>
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label" for="category_id">التصنيف الرئيسي</label>
-                    <ng-select [(ngModel)]="selectedCategory" (change)="onChange()"
-                    class="form-select ngSelect" formControlName="category_id" [closeOnSelect]="true" >
-                      <ng-option *ngFor="let category of categories" [value]="category.cat_id">{{category.Category_name}}</ng-option>
-                    </ng-select>
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label" for="subcat_id">التصنيف الفرعي</label>
-                    <ng-select [multiple]="true" [clearable]="true"
-                      class="form-select ngSelect" formControlName="subcat_id" >
-                      <ng-option *ngFor="let sub of subCategoriesArr" [value]="sub.subcat_id">{{sub.SubCategory_name}}</ng-option>
-                    </ng-select>
-                  </div>
-                  <div class="col-12">
-                    <button class="btn btn-primary" type="submit">بحث</button>
-                  </div>
-                </form>
-          </div>
-        </div>
+                      placeholder="كلمات مفتاحية" formControlName="Txt"/>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label" for="Status_id"> حالة المستند</label>
+                      <ng-select class="form-select ngSelect" formControlName="Status_id" >
+                        <ng-option *ngFor="let status of allStatus" [value]="status.status_id">{{status.status_name}}</ng-option>
+                      </ng-select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label" for="category_id">التصنيف الرئيسي</label>
+                      <ng-select [(ngModel)]="selectedCategory" (change)="onChange()"
+                      class="form-select ngSelect" formControlName="category_id" [closeOnSelect]="true" >
+                        <ng-option *ngFor="let category of categories" [value]="category.cat_id">{{category.Category_name}}</ng-option>
+                      </ng-select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label" for="subcat_id">التصنيف الفرعي</label>
+                      <ng-select [multiple]="true" [clearable]="true"
+                        class="form-select ngSelect" formControlName="subcat_id" >
+                        <ng-option *ngFor="let sub of subCategoriesArr" [value]="sub.subcat_id">{{sub.SubCategory_name}}</ng-option>
+                      </ng-select>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <button class="btn btn-primary" (click)="toggleCard();filterBySearchForm()" type="submit">بحث</button>
+                      <button class="btn btn-secondary" (click)="clearAll()">مسح</button>
+                    </div>
+                  </form>
+            </div>
+          </div> 
         <div class="card mb-3">
           <div class="card-header">
           </div>
@@ -191,12 +199,12 @@
                         <th class="sort text-center" data-sort="file_name" style="font-size: large;">إسم المستند </th>
                         <th class="sort text-center" data-sort="Doc_No" style="font-size: large;"> رقم المستند</th>
                         <th class="sort text-center" data-sort="Year" style="font-size: large;">سنة الإصدار </th>
-                        <th class="sort text-center" data-sort="isAuthorized" style="font-size: large;"> is Authorizrd </th>
+                        <th class="sort text-center" data-sort="isAuthorized" style="font-size: large;">ملف خاص</th>
                         <th class="sort text-center" data-sort="Country" style="font-size: large;"> الدولة </th>
                         <th class="sort text-center" data-sort="Category" style="font-size: large;"> التصنيف الرئيسي  </th>
                         <th class="sort text-center" data-sort="file_data_status" style="font-size: large;">الحالة</th>
                         <th class="sort text-center" data-sort="file_name" style="font-size: large;">تاريخ أخر تحديث</th>
-                        <th class="text-center" style="font-size: large;"> عرض القرار </th>
+                        <th class="text-center" style="font-size: large;"> عرض المستند</th>
                       </tr>
                     </thead>
                     <tbody class="list">
@@ -219,15 +227,27 @@
                         </td>
                         <td ><img style="width: 30px;height: 20px;" [src]="item.Country.flag"/></td>
                         <td>{{item.Category.Category_name}}</td>
-                        <td [ngStyle]="{'color': item.file_data_status.status_id === 1 ? ' lightgreen' : item.file_data_status.status_id === 2 ? 'gold' : 'red'}" style="font-weight: bolder;">{{item.file_data_status.status_name}}</td>
-                        <td>{{datePipe.transform(item.updatedAt, 'dd/MM/yyyy')}}</td>
                         <td>
+                          <button disabled class="btn me-1 mb-1 rounded-pill btn-sm"
+                          [ngStyle]="{'background-color': item.file_data_status.status_id === 1 ? ' green' : item.file_data_status.status_id === 2 ? 'orange' : 'red'}" style="font-weight: bolder;color: white;"
+                              >
+                                 {{item.file_data_status.status_name}}
+                          </button>
+                        </td>
+                        <!-- <td [ngStyle]="{'color': item.file_data_status.status_id === 1 ? ' lightgreen' : item.file_data_status.status_id === 2 ? 'gold' : 'red'}" style="font-weight: bolder;">{{item.file_data_status.status_name}}</td> -->
+                        <td>{{datePipe.transform(item.updatedAt, 'dd/MM/yyyy')}}</td>
+                        <td class="d-flex justify-content-center align-items-center">
+                          <i [routerLink]="['/file_details',item.File_data_id]" class="bi bi-eye" [class.pointer-events-none]="item.isAuthorized && user.role_id === 4"
+                            style="font-size: 24px;">
+                          </i>
+                        </td>
+                        <!-- <td>
                             <button mat-raised-button [disabled]="(item.isAuthorized && user.role_id === 4)"
                             [matTooltipDisabled]="!(item.isAuthorized && user.role_id === 4)" [matTooltip]="disabledTooltip"
                             class="btn btn-outline-secondary " [routerLink]="['/file_details',item.File_data_id]">
                             preview
                           </button>
-                        </td>
+                        </td> -->
                       </tr>
                     </tbody>
                   </table>
@@ -286,15 +306,27 @@
                         </td>
                         <td ><img style="width: 30px;height: 20px;" [src]="item.Country.flag"/></td>
                         <td>{{item.Category.Category_name}}</td>
-                        <td>{{item.file_data_status.status_name}}</td>
-                        <td>{{datePipe.transform(item.updatedAt, 'dd/MM/yyyy')}}</td>
+                        <!-- <td>{{item.file_data_status.status_name}}</td> -->
                         <td>
+                          <button disabled class="btn me-1 mb-1 rounded-pill btn-sm"
+                          [ngStyle]="{'background-color': item.file_data_status.status_id === 1 ? ' green' : item.file_data_status.status_id === 2 ? 'orange' : 'red'}" style="font-weight: bolder;color: white;"
+                              >
+                                 {{item.file_data_status.status_name}}
+                          </button>
+                        </td>
+                        <td>{{datePipe.transform(item.updatedAt, 'dd/MM/yyyy')}}</td>
+                        <td class="d-flex justify-content-center align-items-center">
+                          <i [routerLink]="['/file_details',item.File_data_id]" class="bi bi-eye" [class.pointer-events-none]="item.isAuthorized && user.role_id === 4"
+                            style="font-size: 24px;">
+                          </i>
+                        </td>
+                        <!-- <td>
                             <button mat-raised-button [disabled]="(item.isAuthorized && user.role_id === 4)"
                             [matTooltipDisabled]="!(item.isAuthorized && user.role_id === 4)" [matTooltip]="disabledTooltip"
                             class="btn btn-outline-secondary " [routerLink]="['/file_details',item.File_data_id]">
                             preview
                           </button>
-                        </td>
+                        </td> -->
                       </tr>
                     </tbody>
                   </table>

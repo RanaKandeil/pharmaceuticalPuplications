@@ -18,7 +18,7 @@ export class LoadingInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler) {
     this.loadingService.show();
     return next.handle(request).pipe(
-      tap((res:any)=>console.log(res)),
+      //tap((res:any)=>console.log(res)),
       catchError((error: HttpErrorResponse) => {
         this.loadingService.hide();
         this.loadingService.setError(error.message);

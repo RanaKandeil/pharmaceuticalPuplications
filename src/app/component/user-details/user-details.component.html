@@ -68,7 +68,9 @@
                 class="h-100 w-100 rounded-circle overflow-hidden position-relative"
               >
                 <img
-                [src]="imageUrl || 'https://png.pngtree.com/png-clipart/20210915/ourmid/pngtree-user-avatar-placeholder-png-image_3918418.jpg'"
+                [ngStyle]="{ 'background-color': user.role_id === 1 ? '#e63757' : user.role_id === 2 ? '#f5803e' : user.role_id === 3 ? 'green' : user.role_id === 4 ? '#2c7be5' : '' }"
+
+                [src]="imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png'"
                   width="200"
                   alt=""
                   data-dz-thumbnail="data-dz-thumbnail"

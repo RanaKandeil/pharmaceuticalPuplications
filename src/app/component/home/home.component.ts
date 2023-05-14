@@ -48,6 +48,7 @@ export class HomeComponent implements OnInit {
  selectedSubcategoryIndex!: any;
  activeFileFilter = false;
  datePipe = new DatePipe('en-US');
+ searchBox=false;
  
  
 
@@ -75,6 +76,7 @@ export class HomeComponent implements OnInit {
     })
 
      this.user = JSON.parse(this.cookieService.get('user')!)
+     console.log(this.user)
      
      const userRoleId = this.user.role_id
      this.categoryService.getRoleById(userRoleId).subscribe((res:any)=>{
@@ -195,8 +197,8 @@ export class HomeComponent implements OnInit {
 
   filterDataBySub(category:any,subCategories:any){
     const searchObj:SearchFiltre = {
-      subcat_id:subCategories.subcat_id,
-      category_id: category.cat_id,
+       subcat_id:subCategories.subcat_id,
+       category_id: category.cat_id,
        country_id :this.user.Country_id,
        status_id:null,
        file_name:null,
@@ -204,6 +206,7 @@ export class HomeComponent implements OnInit {
        doc_no:null,
        txt:null
     };
+    console.log(searchObj)
     this.searchForFiles(searchObj);
     this.selectedCategoryIndex = category.id;
     this.selectedSubcategoryIndex = subCategories.subcat_id;
@@ -334,5 +337,9 @@ export class HomeComponent implements OnInit {
       return this.inactiveFiles.slice(startIndex, startIndex + this.pageSize);
     }
     return [];
+  }
+
+  toggleCard(){
+    this.searchBox = !this.searchBox
   }
 }

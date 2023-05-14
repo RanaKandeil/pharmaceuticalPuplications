@@ -40,6 +40,23 @@ import { ChangePasswordComponent } from './component/change-password/change-pass
 import {MatButtonModule} from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { QuillModule } from 'ngx-quill';
+import { ConfirmationDialogComponent } from './component/confirmation-dialog/confirmation-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import {  PDFDocumentProxy } from 'ngx-extended-pdf-viewer';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { JwtInterceptorService } from './jwt-interceptor.service';
+
+
+
+
+
+
+
+
+
 
 
 
@@ -60,6 +77,7 @@ import { QuillModule } from 'ngx-quill';
     FileDetailsComponent,
     UpdateFileComponent,
     ChangePasswordComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -76,8 +94,13 @@ import { QuillModule } from 'ngx-quill';
     BrowserAnimationsModule,
     PdfViewerModule,
     MatTooltipModule,
+    MatFormFieldModule,
     MatButtonModule,
     NgxEditorModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatIconModule,
+    NgxExtendedPdfViewerModule,
     QuillModule.forRoot(),
     ToastrModule.forRoot(
       {
@@ -106,11 +129,10 @@ import { QuillModule } from 'ngx-quill';
       } as SocialAuthServiceConfig,
     },
     MessageService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LoadingInterceptor,
-      multi: true
-    },DatePipe
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor,multi: true},
+    DatePipe,
+    
   ],
   bootstrap: [AppComponent]
 })

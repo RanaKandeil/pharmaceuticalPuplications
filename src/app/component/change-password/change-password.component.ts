@@ -26,6 +26,7 @@ this.authService.getUser(this.userIdLocal).subscribe(res=>{
   this.userApi= res
   this.model.email= this.userApi.email
   console.log(this.model.email)
+  this.model.name=`${this.userApi.first_name} ${this.userApi.last_name}`
 })
   }
 async changePassword(){

@@ -17,7 +17,8 @@ userForm!:FormGroup;
 val:any;
 rolesId:any;
 countries:any;
-imageUrl:any
+imageUrl:any;
+user:any
   constructor(private route:ActivatedRoute
     ,private categoryService:CategoryService,private fb:FormBuilder,
     private router:Router, private authService:AuthService,
@@ -40,12 +41,12 @@ imageUrl:any
 
     this.route.data.subscribe((data:any)=>{
       console.log(data)
-      const user = data['user'];
+       this.user = data['user'];
       this.userForm.patchValue({
-        email:user.email,
-        role_id:user.role_id,
-        Country_id:user.Country_id,
-        isActive:user.isActive
+        email:this.user.email,
+        role_id:this.user.role_id,
+        Country_id:this.user.Country_id,
+        isActive:this.user.isActive
       },{emitEvent:true})
       // this.userForm.controls['email'].setValue(user.email); 
       // this.userForm.controls['role_id'].setValue(user.role_id);

@@ -10,6 +10,7 @@ import { FileService } from 'src/app/services/file.service';
 import Quill from 'quill'
 import BlotFormatter from 'quill-blot-formatter'
 import { CookieOptions, CookieService } from 'ngx-cookie-service';
+import { DatePipe } from '@angular/common';
 
 Quill.register('modules/blotFormatter', BlotFormatter)
 
@@ -37,12 +38,14 @@ export class UpdateFileComponent implements OnInit {
  filePathString:any;
  quillEditorModules = {}
  pdfLoading: boolean = true;
+ createdAtFormatted:any;
+ updatedAtFormatted:any;
  @ViewChild('fileInput') fileInput!: ElementRef;
  get f() { return this.fileForm.controls; }
 
 
   constructor(private categoryService:CategoryService,
-    private cookieService:CookieService,
+    private cookieService:CookieService,private datePipe: DatePipe,
      private fileService:FileService, private fb:FormBuilder,
      private route:ActivatedRoute,private router:Router,
       private toastr:ToastrService,private sanitizer: DomSanitizer) { 
@@ -68,22 +71,28 @@ export class UpdateFileComponent implements OnInit {
     this.userId = userlogged.user_id
     this.fileForm = this.fb.group({
       File_data_id:[''],
-      file_name:['',Validators.required],
+      file_name:['',[Validators.required,Validators.minLength(3)]],
       Doc_No:['', Validators.required],
       Year: ['' ,Validators.required],
-      txt_Ar:['',Validators.required],
-      txt_Eng:['',Validators.required],
+      txt_Ar:[''],
+      txt_Eng:[''],
       fileID:[''],
       Country_id:['',Validators.required],
       Category_id:['',Validators.required],
       subCategories:[[],Validators.required],
       createdByID : [this.userId],
       UpdatedbyID: [this.userId],
+      createdAt:[''],
+      updatedAt:[''],
       status_id:['',Validators.required],
-      file_desc:['',Validators.required],
+      file_desc:[''],
       isAuthorized:[''],
       isActive:['']
-    })    
+    }) 
+    
+      this.createdAtFormatted = this.datePipe.transform(this.file?.data?.createdAt, 'dd/MM/yyyy');
+      this.updatedAtFormatted = this.datePipe.transform(this.file?.data?.updatedAt, 'dd/MM/yyyy');
+
 
     this.categoryService.getCategories().subscribe(res=>{
       this.categories = res;
@@ -142,8 +151,10 @@ export class UpdateFileComponent implements OnInit {
         file_desc:this.file?.data?.file_desc,
         isAuthorized:this.file?.data?.isAuthorized,
         isActive:this.file?.data?.isactive,
-       
-        
+        createdByID:`${this.file?.data?.createdBy?.first_name} ${this.file?.data?.createdBy?.last_name}`,
+        UpdatedbyID:`${this.file?.data?.updatedBy.first_name} ${this.file?.data?.updatedBy.last_name}`,
+        createdAt:this.datePipe.transform(this.file?.data?.createdAt, 'dd/MM/yyyy'),
+        updatedAt:this.datePipe.transform(this.file?.data?.updatedAt, 'dd/MM/yyyy'),  
       },{ emitEvent: true })
     })
     console.log("DATAAAAAAAAAAAAAAAAAAAAAAaa")
@@ -217,16 +228,21 @@ export class UpdateFileComponent implements OnInit {
       formData.append('subCategories', this.fileForm.get('subCategories')?.value);
       formData.append('status_id',this.fileForm.get('status_id')?.value);
       formData.append('file_desc',this.fileForm.get('file_desc')?.value);
-      formData.append('userID', this.fileForm.get('createdByID')?.value);
+      // formData.append('createdByID', this.fileForm.get('createdByID')?.value);
+      // formData.append('createdAt', this.fileForm.get('createdAt')?.value);
+      // formData.append('updatedAt',this.fileForm.get('updatedAt')?.setValue(new Date().toISOString()));
+      formData.append('userID',this.userId);
+
+
       console.log(formData)
       formData.forEach((value, key) => {
         console.log(`${key}: ${value}`);
       });
       this.fileService.updateFile(formData).subscribe(result=>{
-        this.toastr.success('File updated Successfully!', 'Success');
-        this.router.navigate(['/home'])
+        this.toastr.success('File Updated Successfully', 'Success');
+        this.router.navigate(['/file_details',this.fileId])
       },
-      error=>{ this.toastr.error('Error In Updating File', 'Error');}
+      error=>{ (error?.error?.message) ? this.toastr.error(error?.error?.message, 'Error'):this.toastr.error('Something went wrong', 'Error') ;}
       ) 
 }
 

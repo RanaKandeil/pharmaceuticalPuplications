@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
           key: 'tc',
           severity: 'error',
           summary: error.status,
-          detail: error.error.message,
+          detail: error?.error?.message,
         });
       },
     });
