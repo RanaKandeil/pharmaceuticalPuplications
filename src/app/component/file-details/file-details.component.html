@@ -47,7 +47,7 @@
         </nav>
 
 
-        <div class="content">
+        <div>
         <div class="card mb-3">
             <div class="card-header">
                   <div class="col">
@@ -114,7 +114,7 @@
                     <div class="col-3 col-sm-4 mb-3">
                       <p class=" mb-1">التصنيف الفرعي</p>
                     </div>
-                    <div style="font-weight: bold;" class="col-5">{{subObj}}</div>
+                    <div style="font-weight: bold;" class="col-8">{{subObj}}</div>
                   </div>
                   <div class="row">
                     <div class="col-3 col-sm-4 mb-3">
@@ -126,7 +126,7 @@
                     <div class="col-3 col-sm-4 mb-3 ">
                       <p class=" mb-1">حالة المستند</p>
                     </div>
-                    <div class="col-md-5"> 
+                    <div class="col-5 "> 
                       <button disabled class="btn me-1 mb-1 rounded-pill btn-sm"
                       [ngStyle]="{'background-color': file?.data?.file_data_status.status_id === 1 ? ' green' : file?.data?.file_data_status.status_id === 2 ? 'orange' : 'red'}" style="font-weight: bolder;color: white;">
                         {{file?.data?.file_data_status?.status_name}}
@@ -191,8 +191,8 @@
                   </div>
                 </div>
               </div> -->
-            <div  class="card-body bg-light border-top">
-              <div class="row">
+            <div  class="card-body bg-light border-top" dir="ltr">
+              <div class="row" >
                 <div class="col-md-6">
                   <div class="row">
                     <div class="col-md-3 mb-3">
@@ -208,7 +208,7 @@
                 <div class="col-md-6">
                   <div class="row">
                     <div class="col-md-3 mb-3">
-                      <p class=" mb-1"> Updated By :</p>
+                      <p  class=" mb-1"> Updated By :</p>
                     </div>
                     <div class="col-md-5" style="font-weight: bold;">{{file?.data?.updatedBy?.first_name}} {{file?.data?.updatedBy?.last_name}}</div>
                   </div>
@@ -221,13 +221,15 @@
             </div>
           </div>
         </div>
-          <footer class="footer">
+          <footer dir="ltr">
             <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
               <div class="col-12 col-sm-auto text-center">
-                <p class="mb-0 text-600">Thank you for creating with Falcon <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none"> 2022 © <a href="https://themewagon.com">Themewagon</a></p>
-              </div>
-              <div class="col-12 col-sm-auto text-center">
-                <p class="mb-0 text-600">v3.14.0</p>
+                <p style="text-align: start;" class="mb-1 text-600">Contact Us :
+                  <br>
+                  <a >E.mail :<span style="font-weight: bold;"> pharmacia2006@gmail.com</span></a>
+                  <br>
+                  <a href="http://www.facebook.com/Pharmaciax">http://www.facebook.com/Pharmaciax</a>
+                </p>
               </div>
             </div>
           </footer>

@@ -41,11 +41,12 @@ export class UpdateFileComponent implements OnInit {
  createdAtFormatted:any;
  updatedAtFormatted:any;
  @ViewChild('fileInput') fileInput!: ElementRef;
+ datePipe = new DatePipe('en-US');
  get f() { return this.fileForm.controls; }
 
 
   constructor(private categoryService:CategoryService,
-    private cookieService:CookieService,private datePipe: DatePipe,
+    private cookieService:CookieService,
      private fileService:FileService, private fb:FormBuilder,
      private route:ActivatedRoute,private router:Router,
       private toastr:ToastrService,private sanitizer: DomSanitizer) { 
@@ -247,6 +248,6 @@ export class UpdateFileComponent implements OnInit {
 }
 
   cancel(){
-    this.router.navigate(['/home'])
+    this.router.navigate(['/file_details',this.fileId])
   }
 }

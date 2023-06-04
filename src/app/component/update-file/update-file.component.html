@@ -234,7 +234,7 @@
                       </div>
                   </div>
                 </div>
-                <div class="row mb-4">
+                <!-- <div class="row mb-4">
                   <div class="col-md-2 text-center ">
                       <label class="form-label" for="createdByID">Created By</label>
                   </div>
@@ -276,7 +276,7 @@
                     class="form-control"  
                     type="text" />
                   </div>
-                </div>
+                </div> -->
                 <div class="row mb-3">
                   <div class="col-md-2 text-center">
                     <label class="form-label" for="isAuthorized">Authorized file</label>
@@ -291,23 +291,54 @@
                     <input formControlName="isActive" type="checkbox">
                   </div>
                 </div>
-                <div class="d-flex justify-content-between">
-
-                  <button class="btn btn-primary" [disabled]="!fileForm.valid" type="submit">حفظ</button>
-                  <button class="btn btn-danger ms-4" type="button" (click)="cancel()" >إلغاء</button>
+                <div  class="card-body bg-light border-top" dir="ltr">
+                  <div class="row" >
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col-md-3 mb-3">
+                          <p class=" mb-1"> Created By :</p>
+                        </div>
+                        <div class="col-md-5" style="font-weight: bold;">{{file?.data?.createdBy?.first_name}} {{file?.data?.createdBy?.last_name}}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-3 mb-3"> Created At :</div>
+                        <div class="col-md-5" style="font-weight: bold;">{{datePipe.transform(file?.data?.createdAt, 'dd/MM/yyyy')}}</div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col-md-3 mb-3">
+                          <p  class=" mb-1"> Updated By :</p>
+                        </div>
+                        <div class="col-md-5" style="font-weight: bold;">{{file?.data?.updatedBy?.first_name}} {{file?.data?.updatedBy?.last_name}}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-3 mb-3"> Updated At :</div>
+                        <div class="col-md-5" style="font-weight: bold;">{{datePipe.transform(file?.data?.updatedAt, 'dd/MM/yyyy')}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div  class="card-body bg-light border-top">
+                  <div class="d-flex justify-content-between">
+                    <button class="btn btn-primary" [disabled]="!fileForm.valid" type="submit">حفظ</button>
+                    <button class="btn btn-danger ms-4" type="button" (click)="cancel()" >إلغاء</button>
+                  </div>
                 </div>
               </form>
         </div>
       </div>
-      <footer class="footer">
-          <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
-            <div class="col-12 col-sm-auto text-center">
-              <p class="mb-0 text-600">Thank you for creating with Falcon <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none"> 2022 © <a href="https://themewagon.com">Themewagon</a></p>
-            </div>
-            <div class="col-12 col-sm-auto text-center">
-              <p class="mb-0 text-600">v3.14.0</p>
-            </div>
+      <footer dir="ltr">
+        <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
+          <div class="col-12 col-sm-auto text-center">
+            <p style="text-align: start;" class="mb-1 text-600">Contact Us :
+              <br>
+              <a >E.mail :<span style="font-weight: bold;"> pharmacia2006@gmail.com</span></a>
+              <br>
+              <a href="http://www.facebook.com/Pharmaciax">http://www.facebook.com/Pharmaciax</a>
+            </p>
           </div>
+        </div>
       </footer>
       </div>
       </div>

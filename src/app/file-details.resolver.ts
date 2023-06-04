@@ -15,6 +15,7 @@ export class FileDetailsResolver implements Resolve<File[]> {
   constructor(private fileService:FileService){ }
   resolve(route:ActivatedRouteSnapshot): Observable<File[]> {
     const fileId = route.params['id']
+   
     return this.fileService.getFile(fileId);
   }
 }

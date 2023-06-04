@@ -1,6 +1,6 @@
 import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  HostListener } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Category } from 'src/app/interfaces/category';
@@ -49,8 +49,7 @@ export class HomeComponent implements OnInit {
  activeFileFilter = false;
  datePipe = new DatePipe('en-US');
  searchBox=false;
- 
- 
+ isSmallScreen: boolean = false;
 
 
 
@@ -121,6 +120,18 @@ export class HomeComponent implements OnInit {
     })
 
     this.showAll();
+
+    this.setIsSmallScreen();
+    
+  }
+  
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.setIsSmallScreen();
+  }
+
+  private setIsSmallScreen() {
+    this.isSmallScreen = window.innerWidth < 576; // Adjust the breakpoint as per your needs
   }
 
   getCountryFlag(countryId: number): string {

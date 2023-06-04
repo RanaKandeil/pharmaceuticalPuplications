@@ -16,7 +16,8 @@ currentUser$= this.currentUserSource.asObservable()
   constructor(private http:HttpClient, private cookieService:CookieService) { }
 
   getAll(){
-    return this.http.get('https://pharmaciax-api.onrender.com/users')
+    // return this.http.get('https://pharmaciax-api.onrender.com/users')
+    return this.http.get(`${environment.base_url}`+"users")
   }
   getUser(id:any):Observable<any>{
     return this.http.get(`${environment.base_url}`+"user" + "/" + id)

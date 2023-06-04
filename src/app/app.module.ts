@@ -48,6 +48,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { JwtInterceptorService } from './jwt-interceptor.service';
+import { UnauthInterceptor } from './unauth.interceptor';
 
 
 
@@ -131,6 +132,11 @@ import { JwtInterceptorService } from './jwt-interceptor.service';
     MessageService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
     {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor,multi: true},
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UnauthInterceptor,
+      multi: true
+    },
     DatePipe,
     
   ],

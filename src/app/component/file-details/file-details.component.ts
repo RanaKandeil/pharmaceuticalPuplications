@@ -7,7 +7,8 @@ import { FileService } from 'src/app/services/file.service';
 import { PDFDocumentProxy } from 'ngx-extended-pdf-viewer';
 // import { PDFDocumentProxy } from 'ng2-pdf-viewer';
 import { DatePipe } from '@angular/common';
-
+import { environment } from 'src/environments/environment';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 
 
@@ -40,43 +41,110 @@ datePipe = new DatePipe('en-US');
 
     pdfUrl:any; 
   ngOnInit(): void {
-    //Test
-    // const fileId = '1TSaaV8uhorFOYTs7y9-uZPrGTQbTPOcn';
-    // const url = `https://pharmaciax-api.onrender.com/apigoogle/${fileId}`;
-    // this.fileService.getFileFromGoogle(url)
-    // .subscribe(blob => {
-    //   const pdfBlob = new Blob([blob], { type: 'application/pdf' });
-    //   this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(pdfBlob));
-    //   console.log(this.pdfUrl)
-    // });
-
     this.user = JSON.parse(this.cookieService.get('user')!)
     const FileId = this.route.snapshot.paramMap.get('id')
-    this.fileService.getFile(FileId).subscribe((res:any)=>{
-      this.file = res
-      this.pdfLoading = true
-      const subArr =this.file.data.subCategories 
-      // subArr.forEach((subcat:any) => {
-      //   this.subObj += subcat?.SubCategory_name
-      // });
-      console.log("subArr -",subArr)
+    if (this.checkUserLoggedIn()) {
+      this.loadFileDetails(FileId);
+    } else {
+      // User is not logged in, redirect to the login page
+      this.router.navigate(['/login']);
+    }
+
+
+
+    // this.fileService.getFile(FileId).subscribe((res:any)=>{
+    //   this.file = res
+    //   this.pdfLoading = true
+    //   const subArr =this.file.data.subCategories 
+      
+    //   console.log("subArr -",subArr)
+    //   this.subObj = subArr.map((subcat: any) => subcat?.SubCategory_name).join(" ]  [ ");
+    //   this.subObj = " [ " + this.subObj + " ] ";
+     
+    //   const filePath = this.file?.data?.fileID;
+    //   const url = `${environment.base_url}apigoogle/${filePath}`
+    //   this.fileService.getFileFromGoogle(url)
+    //  .subscribe(blob => {
+    //     const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+    //     this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(pdfBlob));
+    //     console.log(this.pdfUrl)
+    //     this.pdfLoading = false
+    //  }); 
+    // });
+  }
+  private checkUserLoggedIn(): boolean {
+    // Implement your logic to check if the user is logged in
+    // You can access the token from the cookie service and validate it
+    const token = this.cookieService.get('tokenJwt');
+    // Add your token validation logic here
+    return !!token; // Return true if the token is valid, false otherwise
+  }
+  private loadFileDetails(fileId: string | null): void {
+    const token = this.cookieService.get('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    this.fileService.getFile(fileId!,  headers ).subscribe(
+      (res: any) => {
+        console.log('Response:', res);
+        // File details retrieval success
+        this.file = res;
+        this.pdfLoading = true;
+        const subArr = this.file.data.subCategories;
+        this.subObj = subArr.map((subcat: any) => subcat?.SubCategory_name).join(" ]  [ ");
+        this.subObj = " [ " + this.subObj + " ] ";
+  
+        const filePath = this.file?.data?.fileID;
+        const url = `${environment.base_url}apigoogle/${filePath}`;
+  
+        this.fileService.getFileFromGoogle(url).subscribe((blob: any) => {
+          const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(pdfBlob));
+          this.pdfLoading = false;
+        });
+      },
+      (error: HttpErrorResponse) => {
+        // File details retrieval error
+        if (error.status === 401) {
+          // Unauthorized access
+          console.log('Unauthorized access');
+          this.router.navigate(['/login']);
+        } else {
+          // Other error handling logic
+          // You can display an error message or handle the error in a different way
+          console.error('Error retrieving file details:', error);
+          // For example, you can show a toast or a modal with an error message
+          // this.toastr.error('Failed to load file details. Please try again later.', 'Error');
+        }
+        this.pdfLoading = false; // Ensure loading spinner is hidden even in case of an error
+      }
+    );
+  }
+
+
+  private loadFileDetails1(fileId: string | null): void {
+    this.fileService.getFile(fileId!).subscribe((res: any) => {
+      this.file = res;
+      this.pdfLoading = true;
+      const subArr = this.file.data.subCategories;
       this.subObj = subArr.map((subcat: any) => subcat?.SubCategory_name).join(" ]  [ ");
       this.subObj = " [ " + this.subObj + " ] ";
-     
+
       const filePath = this.file?.data?.fileID;
-      const url = `https://pharmaciax-api.onrender.com/apigoogle/${filePath}`;
-      this.fileService.getFileFromGoogle(url)
-     .subscribe(blob => {
+      const url = `${environment.base_url}apigoogle/${filePath}`;
+
+      this.fileService.getFileFromGoogle(url).subscribe((blob: any) => {
         const pdfBlob = new Blob([blob], { type: 'application/pdf' });
         this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(pdfBlob));
-        console.log(this.pdfUrl)
-        this.pdfLoading = false
-     }); 
+        this.pdfLoading = false;
+      });
     });
   }
-  // onPdfLoadComplete(pdf: PDFDocumentProxy): void {
-  //   this.pdfLoading = true;
-  // }
+
+
+
+
+
+
   onPdfLoadComplete(event: any): void {
     const pdf: PDFDocumentProxy = event.source._pdfInfo;
     this.pdfLoading = false;

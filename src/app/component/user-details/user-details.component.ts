@@ -26,7 +26,7 @@ user:any
   
   ngOnInit(): void {
     this.userForm = this.fb.group({
-      email:[""],
+      email:[{ value: '', disabled: true }],
       role_id:[""],
       Country_id:[""],
       isActive:['']
@@ -47,11 +47,8 @@ user:any
         role_id:this.user.role_id,
         Country_id:this.user.Country_id,
         isActive:this.user.isActive
-      },{emitEvent:true})
-      // this.userForm.controls['email'].setValue(user.email); 
-      // this.userForm.controls['role_id'].setValue(user.role_id);
-      // this.userForm.controls['Country_id'].setValue(user.Country_id) ;
-      // this.userForm.controls['isActive'].setValue(user.isActive)
+      },{emitEvent:true}) ;
+      this.userForm.get('email')?.disable();   
     })
       this.userForm.get('isactive')?.valueChanges.subscribe((value) => {
       const newValue = value === false ? 0 : 1;

@@ -63,8 +63,12 @@ export class FileService {
     return this.http.get(`${environment.base_url}`+'fileData/all').pipe();
   }
  
-  getFile(id:any):Observable<any>{
-    return this.http.get(`${environment.base_url}`+'fileData/GetOne' + '/' + id)
+  getFile(id:any, headers?: HttpHeaders):Observable<any>{
+    const options = headers ? { headers } : undefined;
+    console.log("HEREEEEEEEEEEE")
+    // return this.http.get(`${environment.base_url}`+'fileData/GetOne' + '/' + id)
+    return this.http.get(`${environment.base_url}fileData/GetOne/${id}`, options);
+
   }
   
 getFileFromGoogle(url:any){
